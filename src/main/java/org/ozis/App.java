@@ -1,11 +1,16 @@
 package org.ozis;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+public class App extends Application{
+    @Override
+    public void start(Stage stage) {
+        MainManager main = new MainManager();
+        main.start(stage);
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        launch();
     }
 }

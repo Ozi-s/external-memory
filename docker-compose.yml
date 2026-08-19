@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: taskCallendar
+    environment:
+      POSTGRES_DB: externalMemory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/18/docker
+      - ./database/dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+
+volumes:
+  postgres_data:

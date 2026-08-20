@@ -1,4 +1,4 @@
-package org.ozis.ui;
+package org.ozis.ui.panel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ProjectsView {
     static VBox projects = new VBox(10); // Лист проектов
     static Button projectAddBtn = new Button("+"); // кнопка добавить проект
 
-    public static BorderPane start(String[] projects_list) {
+    public static BorderPane getLeftPanel(String[] projects_list) {
         // левая панель 
         LeftPanel.setPadding(new Insets(20));
         LeftPanel.setMinWidth(220);
@@ -39,7 +39,7 @@ public class ProjectsView {
         // VBox контейнер объектов проектов
         projects.setMinWidth(200);
         projects.setPadding(new Insets(5, 10, 5, 10));
-        projects.setStyle("-fx-background-color: #b6b6b6; ");
+        projects.setStyle("-fx-background-color: #141414; ");
 
         // кнопка "добавить проект"
         projectAddBtn.setMaxWidth(Double.MAX_VALUE);

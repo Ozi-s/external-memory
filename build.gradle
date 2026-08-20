@@ -25,6 +25,12 @@ dependencies {
     // This dependency is used by the application.
     implementation libs.guava
     implementation 'org.postgresql:postgresql:42.7.4'
+    // Hibernate Core (JPA API)
+    implementation 'org.hibernate.orm:hibernate-core:6.6.3.Final'
+// Драйвер PostgreSQL
+    implementation 'org.postgresql:postgresql:42.7.4'
+// Пул соединений (опционально, но рекомендуется)
+    implementation 'com.zaxxer:HikariCP:5.0.1'
 }
 
 javafx {

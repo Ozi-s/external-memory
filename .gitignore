@@ -13,3 +13,18 @@ out
 *.iml
 build_reports
 build
+# IntelliJ IDEA (полная папка)
+.idea/
+*.iws
+*.ipr
+
+# Скомпилированные файлы и временные папки
+bin/
+*.class
+
+# Локальные конфигурации (не должны попадать в репозиторий)
+**/hibernate-local.cfg.xml
+**/application-local.properties
+**/secret.properties
+**/local.properties
+*.log

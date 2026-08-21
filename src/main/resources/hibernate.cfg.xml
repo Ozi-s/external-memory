@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "https://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Настройки подключения -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5434/externalMemory</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">postgres</property>
+
+        <!-- Пул соединений (встроенный, т.к. HikariCP не найден) -->
+        <property name="hibernate.connection.pool_size">5</property>
+
+        <!-- Диалект (можно не указывать, Hibernate сам определит) -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Поведение при старте -->
+        <property name="hibernate.hbm2ddl.auto">validate</property>
+
+        <!-- Логирование SQL -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- ====== ЯВНОЕ ПЕРЕЧИСЛЕНИЕ СУЩНОСТЕЙ ====== -->
+        <mapping class="org.ozis.entity.Task_Status"/>
+        <mapping class="org.ozis.entity.Desigion_Status"/>
+        <mapping class="org.ozis.entity.Task"/>
+        <mapping class="org.ozis.entity.Desigion"/>
+        <mapping class="org.ozis.entity.Context"/>
+        <mapping class="org.ozis.entity.Project"/>
+    </session-factory>
+</hibernate-configuration>

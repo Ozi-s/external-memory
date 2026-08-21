@@ -22,7 +22,7 @@ public class Desigion_Status {
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "desigion_status")
+    @OneToMany(mappedBy = "status")   // ← исправлено
     private List<Desigion> desigions;
 
     public int getId() {
@@ -54,6 +54,4 @@ public class Desigion_Status {
                 ", name='" + name + '\'' +
                 '}';
     }
-
-
 }

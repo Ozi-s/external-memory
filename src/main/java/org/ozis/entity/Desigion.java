@@ -2,26 +2,23 @@ package org.ozis.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @Entity
 @Table(name = "desigion")
 public class Desigion {
 
-    public Desigion(String name, String files, String context, String desigion_text, String reason, Desigion_Status status, Project project, Task task, Desigion alternative_desigion, int dependent_task) {
+    public Desigion(String name, String files, String context, String desigion_text, String reason, Desigion_Status status, Project project_id, Task dependent_task, Desigion alternative_desigion) {
         this.name = name;
         this.files = files;
         this.context = context;
         this.desigion_text = desigion_text;
         this.reason = reason;
         this.status = status;
-        this.project = project;
-        this.task = task;
-        this.alternative_desigion = alternative_desigion;
+        this.project_id = project_id;
         this.dependent_task = dependent_task;
+        this.alternative_desigion = alternative_desigion;
     }
 
     public Desigion() {
@@ -52,11 +49,11 @@ public class Desigion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    private Project project;
+    private Project project_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="dependent_task")
-    private Task task;
+    private Task dependent_task;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="alternative_desigion")
@@ -64,8 +61,6 @@ public class Desigion {
 
     @OneToMany(mappedBy = "alternative_desigion")
     private List<Desigion> alternatives;
-
-    private int dependent_task;
 
     public int getId() {
         return id;
@@ -109,18 +104,15 @@ public class Desigion {
         this.reason = reason;
     }
 
-    public int getDependent_task() {
-        return dependent_task;
-    }
-    public void setDependent_task(int dependent_task) {
+    public void setDependent_task(Task dependent_task) {
         this.dependent_task = dependent_task;
     }
 
-    public Project getProject() {
-        return project;
+    public Project getProject_id() {
+        return project_id;
     }
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProject_id(Project project_id) {
+        this.project_id = project_id;
     }
 
     public Desigion_Status getStatus() {
@@ -128,13 +120,6 @@ public class Desigion {
     }
     public void setStatus(Desigion_Status status) {
         this.status = status;
-    }
-
-    public Task getTask() {
-        return task;
-    }
-    public void setTask(Task task) {
-        this.task = task;
     }
 
     public Desigion getAlternative_desigion() {
@@ -160,8 +145,7 @@ public class Desigion {
                 ", desigion_text='" + desigion_text + '\'' +
                 ", reason='" + reason + '\'' +
                 ", status=" + status +
-                ", project=" + project +
-                ", task=" + task +
+                ", project=" + project_id +
                 ", alternative_desigion=" + alternative_desigion +
                 ", dependent_task=" + dependent_task +
                 '}';

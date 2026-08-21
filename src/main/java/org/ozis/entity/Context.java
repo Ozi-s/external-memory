@@ -2,8 +2,6 @@ package org.ozis.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name="context")
@@ -12,14 +10,14 @@ public class Context {
     public Context() {
     }
 
-    public Context(String difficulty, LocalDateTime last_updated, String think, String in_progress, String done, String to_do, Project project) {
+    public Context(String difficulty, LocalDateTime last_updated, String think, String in_progress, String done, String to_do, Project project_id) {
         this.difficulty = difficulty;
         this.last_updated = last_updated;
         this.think = think;
         this.in_progress = in_progress;
         this.done = done;
         this.to_do = to_do;
-        this.project = project;
+        this.project_id = project_id;
     }
 
     @Id
@@ -41,7 +39,7 @@ public class Context {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="project_id")
-    private Project project;
+    private Project project_id;
 
     public int getId() {
         return id;
@@ -92,12 +90,12 @@ public class Context {
         this.to_do = to_do;
     }
 
-    public Project getProject() {
-        return project;
+    public Project getProject_id() {
+        return project_id;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProject_id(Project project_id) {
+        this.project_id = project_id;
     }
 
     @Override
@@ -109,7 +107,7 @@ public class Context {
                 ", in_progress='" + in_progress + '\'' +
                 ", done='" + done + '\'' +
                 ", to_do='" + to_do + '\'' +
-                ", project=" + project +
+                ", project=" + project_id +
                 '}';
     }
 }

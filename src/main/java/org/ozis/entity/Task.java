@@ -6,20 +6,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name="table")
+@Table(name="task")
 public class Task {
 
     public Task() {
     }
 
-    public Task(String name, int execution_period, Task_Status status, String files, String description, LocalDate deadline, Project project) {
+    public Task(String name, int execution_period, Task_Status task_status, String files, String description, LocalDate deadline, Project project_id) {
         this.name = name;
         this.execution_period = execution_period;
-        this.status = status;
+        this.task_status = task_status;
         this.files = files;
         this.description = description;
         this.deadline = deadline;
-        this.project = project;
+        this.project_id = project_id;
     }
 
     @Id
@@ -34,7 +34,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="task_status")
-    private Task_Status status;
+    private Task_Status task_status;
 
     @Column(nullable = false)
     private String files;
@@ -46,7 +46,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
-    private Project project;
+    private Project project_id;
 
     @OneToMany(mappedBy = "dependent_task")
     private List<Desigion> desigions;
@@ -100,18 +100,19 @@ public class Task {
         this.desigions = desigions;
     }
 
-    public Project getProject() {
-        return project;
+    public Project getProject_id() {
+        return project_id;
     }
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProject_id(Project project_id) {
+        this.project_id = project_id;
     }
 
-    public Task_Status getStatus() {
-        return status;
+    public Task_Status getTask_status() {
+        return task_status;
     }
-    public void setStatus(Task_Status status) {
-        this.status = status;
+
+    public void setTask_status(Task_Status task_status) {
+        this.task_status = task_status;
     }
 
     @Override
@@ -119,11 +120,11 @@ public class Task {
         return "Task{" +
                 "name='" + name + '\'' +
                 ", execution_period=" + execution_period +
-                ", status=" + status +
+                ", status=" + task_status +
                 ", files='" + files + '\'' +
                 ", description='" + description + '\'' +
                 ", deadline=" + deadline +
-                ", project=" + project +
+                ", project=" + project_id +
                 '}';
     }
 }

@@ -1,5 +1,7 @@
 package org.ozis.util;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -23,5 +25,9 @@ public class HibernateUtil {
 
     public static void shutdown() {
         getSessionFactory().close();
+    }
+
+    public static EntityManager createEntityManager() {
+        return getSessionFactory().unwrap(EntityManagerFactory.class).createEntityManager();
     }
 }

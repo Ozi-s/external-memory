@@ -2,16 +2,15 @@ package org.ozis.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="project")
 public class Project {
 
-    public Project(String place, String name, int task_id, int desigion_id, int context_id) {
+    public Project(String place, String name) {
         this.place = place;
         this.name = name;
-        this.task_id = task_id;
-        this.desigion_id = desigion_id;
-        this.context_id = context_id;
     }
 
     public Project() {
@@ -26,16 +25,18 @@ public class Project {
 
     private String name;
 
-    private int task_id;
+    @OneToMany(mappedBy = "project_id")
+    private List<Desigion> desigions;
 
-    private int desigion_id;
+    @OneToMany(mappedBy = "project_id")
+    private List<Task> tasks;
 
-    private int context_id;
+    @OneToMany(mappedBy = "project_id")
+    private List<Context> contexts;
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -43,7 +44,6 @@ public class Project {
     public String getPlace() {
         return place;
     }
-
     public void setPlace(String place) {
         this.place = place;
     }
@@ -51,44 +51,36 @@ public class Project {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public int getTask_id() {
-        return task_id;
+    public List<Desigion> getDesigions() {
+        return desigions;
+    }
+    public void setDesigions(List<Desigion> desigions) {
+        this.desigions = desigions;
     }
 
-    public void setTask_id(int task_id) {
-        this.task_id = task_id;
+    public List<Task> getTasks() {
+        return tasks;
+    }
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
-    public int getDesigion_id() {
-        return desigion_id;
+    public List<Context> getContexts() {
+        return contexts;
     }
-
-    public void setDesigion_id(int desigion_id) {
-        this.desigion_id = desigion_id;
-    }
-
-    public int getContext_id() {
-        return context_id;
-    }
-
-    public void setContext_id(int context_id) {
-        this.context_id = context_id;
+    public void setContexts(List<Context> contexts) {
+        this.contexts = contexts;
     }
 
     @Override
     public String toString() {
         return "Project{" +
-                "id=" + id +
-                ", place='" + place + '\'' +
+                "place='" + place + '\'' +
                 ", name='" + name + '\'' +
-                ", task_id=" + task_id +
-                ", desigion_id=" + desigion_id +
-                ", context_id=" + context_id +
                 '}';
     }
 }

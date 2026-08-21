@@ -2,6 +2,8 @@ package org.ozis.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "task_status")
 public class Task_Status {
@@ -19,6 +21,9 @@ public class Task_Status {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "task_status")
+    private List<Task> tasks;
 
     public int getId() {
         return id;
@@ -40,5 +45,12 @@ public class Task_Status {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

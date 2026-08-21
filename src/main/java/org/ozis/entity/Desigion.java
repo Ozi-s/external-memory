@@ -2,6 +2,8 @@ package org.ozis.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -9,14 +11,16 @@ import java.util.Objects;
 @Table(name = "desigion")
 public class Desigion {
 
-    public Desigion(String name, String files, String context, int alternative_desigion, String desigion_text, String reason, int desigion_status, int dependent_task) {
+    public Desigion(String name, String files, String context, String desigion_text, String reason, Desigion_Status status, Project project, Task task, Desigion alternative_desigion, int dependent_task) {
         this.name = name;
         this.files = files;
         this.context = context;
-        this.alternative_desigion = alternative_desigion;
         this.desigion_text = desigion_text;
         this.reason = reason;
-        this.desigion_status = desigion_status;
+        this.status = status;
+        this.project = project;
+        this.task = task;
+        this.alternative_desigion = alternative_desigion;
         this.dependent_task = dependent_task;
     }
 
@@ -36,16 +40,30 @@ public class Desigion {
     @Column(nullable = false)
     private String context;
 
-    private int alternative_desigion;
-
     @Column(nullable = false)
     private String desigion_text;
 
     @Column(nullable = false)
     private String reason;
 
-    @Column(nullable = false)
-    private int desigion_status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "desigion_status")
+    private Desigion_Status status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="dependent_task")
+    private Task task;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="alternative_desigion")
+    private Desigion alternative_desigion;
+
+    @OneToMany(mappedBy = "alternative_desigion")
+    private List<Desigion> alternatives;
 
     private int dependent_task;
 
@@ -77,13 +95,6 @@ public class Desigion {
         this.context = context;
     }
 
-    public int getAlternative_desigion() {
-        return alternative_desigion;
-    }
-    public void setAlternative_desigion(int alternative_desigion) {
-        this.alternative_desigion = alternative_desigion;
-    }
-
     public String getDesigion_text() {
         return desigion_text;
     }
@@ -98,13 +109,6 @@ public class Desigion {
         this.reason = reason;
     }
 
-    public int getDesigion_status() {
-        return desigion_status;
-    }
-    public void setDesigion_status(int desigion_status) {
-        this.desigion_status = desigion_status;
-    }
-
     public int getDependent_task() {
         return dependent_task;
     }
@@ -112,30 +116,54 @@ public class Desigion {
         this.dependent_task = dependent_task;
     }
 
+    public Project getProject() {
+        return project;
+    }
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Desigion_Status getStatus() {
+        return status;
+    }
+    public void setStatus(Desigion_Status status) {
+        this.status = status;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public Desigion getAlternative_desigion() {
+        return alternative_desigion;
+    }
+    public void setAlternative_desigion(Desigion alternative_desigion) {
+        this.alternative_desigion = alternative_desigion;
+    }
+
+    public List<Desigion> getAlternatives() {
+        return alternatives;
+    }
+    public void setAlternatives(List<Desigion> alternatives) {
+        this.alternatives = alternatives;
+    }
+
     @Override
     public String toString() {
         return "Desigion{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", files='" + files + '\'' +
                 ", context='" + context + '\'' +
-                ", alternative_desigion=" + alternative_desigion +
                 ", desigion_text='" + desigion_text + '\'' +
                 ", reason='" + reason + '\'' +
-                ", desigion_status=" + desigion_status +
+                ", status=" + status +
+                ", project=" + project +
+                ", task=" + task +
+                ", alternative_desigion=" + alternative_desigion +
                 ", dependent_task=" + dependent_task +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Desigion desigion = (Desigion) o;
-        return id == desigion.id && alternative_desigion == desigion.alternative_desigion && desigion_status == desigion.desigion_status && dependent_task == desigion.dependent_task && Objects.equals(name, desigion.name) && Objects.equals(files, desigion.files) && Objects.equals(context, desigion.context) && Objects.equals(desigion_text, desigion.desigion_text) && Objects.equals(reason, desigion.reason);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, files, context, alternative_desigion, desigion_text, reason, desigion_status, dependent_task);
     }
 }

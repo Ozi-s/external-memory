@@ -2,6 +2,7 @@ package org.ozis.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,13 +12,14 @@ public class Context {
     public Context() {
     }
 
-    public Context(String difficulty, LocalDateTime last_updated, String think, String in_progress, String done, String to_do) {
+    public Context(String difficulty, LocalDateTime last_updated, String think, String in_progress, String done, String to_do, Project project) {
         this.difficulty = difficulty;
         this.last_updated = last_updated;
         this.think = think;
         this.in_progress = in_progress;
         this.done = done;
         this.to_do = to_do;
+        this.project = project;
     }
 
     @Id
@@ -36,6 +38,10 @@ public class Context {
     private String done;
 
     private String to_do;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="project_id")
+    private Project project;
 
     public int getId() {
         return id;
@@ -86,28 +92,24 @@ public class Context {
         this.to_do = to_do;
     }
 
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
     @Override
     public String toString() {
         return "Context{" +
-                "last_updated=" + last_updated +
+                "difficulty='" + difficulty + '\'' +
+                ", last_updated=" + last_updated +
                 ", think='" + think + '\'' +
                 ", in_progress='" + in_progress + '\'' +
                 ", done='" + done + '\'' +
                 ", to_do='" + to_do + '\'' +
-                ", id=" + id +
-                ", difficulty='" + difficulty + '\'' +
+                ", project=" + project +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Context context = (Context) o;
-        return id == context.id && Objects.equals(difficulty, context.difficulty) && Objects.equals(last_updated, context.last_updated) && Objects.equals(think, context.think) && Objects.equals(in_progress, context.in_progress) && Objects.equals(done, context.done) && Objects.equals(to_do, context.to_do);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, difficulty, last_updated, think, in_progress, done, to_do);
     }
 }

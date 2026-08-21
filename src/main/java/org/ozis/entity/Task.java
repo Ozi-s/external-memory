@@ -3,6 +3,7 @@ package org.ozis.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name="table")
@@ -11,13 +12,14 @@ public class Task {
     public Task() {
     }
 
-    public Task(String name, int execution_period, int task_status, String files, String description, LocalDate deadline) {
+    public Task(String name, int execution_period, Task_Status status, String files, String description, LocalDate deadline, Project project) {
         this.name = name;
         this.execution_period = execution_period;
-        this.task_status = task_status;
+        this.status = status;
         this.files = files;
         this.description = description;
         this.deadline = deadline;
+        this.project = project;
     }
 
     @Id
@@ -30,8 +32,9 @@ public class Task {
     @Column(nullable = false)
     private int execution_period;
 
-    @Column(nullable = false)
-    private int task_status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="task_status")
+    private Task_Status status;
 
     @Column(nullable = false)
     private String files;
@@ -40,6 +43,13 @@ public class Task {
     private String description;
 
     private LocalDate deadline;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="project_id")
+    private Project project;
+
+    @OneToMany(mappedBy = "dependent_task")
+    private List<Desigion> desigions;
 
     public int getId() {
         return id;
@@ -60,13 +70,6 @@ public class Task {
     }
     public void setExecution_period(int execution_period) {
         this.execution_period = execution_period;
-    }
-
-    public int getTask_status() {
-        return task_status;
-    }
-    public void setTask_status(int task_status) {
-        this.task_status = task_status;
     }
 
     public String getFiles() {
@@ -90,16 +93,37 @@ public class Task {
         this.deadline = deadline;
     }
 
+    public List<Desigion> getDesigions() {
+        return desigions;
+    }
+    public void setDesigions(List<Desigion> desigions) {
+        this.desigions = desigions;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Task_Status getStatus() {
+        return status;
+    }
+    public void setStatus(Task_Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", execution_period=" + execution_period +
-                ", task_status=" + task_status +
+                ", status=" + status +
                 ", files='" + files + '\'' +
                 ", description='" + description + '\'' +
                 ", deadline=" + deadline +
+                ", project=" + project +
                 '}';
     }
 }

@@ -2,6 +2,8 @@ package org.ozis.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="desigion_status")
 public class Desigion_Status {
@@ -20,6 +22,9 @@ public class Desigion_Status {
     @Column(nullable = false)
     private String name;
 
+    @OneToMany(mappedBy = "desigion_status")
+    private List<Desigion> desigions;
+
     public int getId() {
         return id;
     }
@@ -32,6 +37,14 @@ public class Desigion_Status {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Desigion> getDesigions() {
+        return desigions;
+    }
+
+    public void setDesigions(List<Desigion> desigions) {
+        this.desigions = desigions;
     }
 
     @Override

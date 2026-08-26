@@ -26,7 +26,7 @@ public class TaskDao extends GenericRepository{
     public List<Task> findTaskByStatus(String status){
         try(EntityManager em=HibernateUtil.createEntityManager()){
             return em.createQuery("""
-                    select t from Task where t.task_status.name=:status""", Task.class).setParameter("status", status).getResultList();
+                    select t from Task where t.task_status.name like :status""", Task.class).setParameter("status", "%"+status+"%").getResultList();
         }
     }
 
@@ -35,9 +35,9 @@ public class TaskDao extends GenericRepository{
             return em.createQuery(
                             "SELECT t.name, t.description, s.name " +
                                     "FROM Task t JOIN t.task_status s " +
-                                    "WHERE t.project.id = :project AND s.name = :status")
-                    .setParameter("project", project)
-                    .setParameter("status", status)
+                                    "WHERE t.project_id.name like :project AND s.name like :status")
+                    .setParameter("project", "%"+project+"%")
+                    .setParameter("status","%"+ status+"%")
                     .getResultList();
         }
     }
@@ -82,7 +82,7 @@ public class TaskDao extends GenericRepository{
                                     FROM Task t
                                     JOIN t.project p
                                     JOIN t.taskStatus s
-                                    where t.execution_period<:period""", TaskDto.class).setParameter("t.execution_period", period).getResultList();
+                                    where t.execution_period<:period""", TaskDto.class).setParameter("period", period).getResultList();
         }
     }
 

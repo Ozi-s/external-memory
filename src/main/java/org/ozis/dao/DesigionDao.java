@@ -1,15 +1,14 @@
 package org.ozis.dao;
 
 import jakarta.persistence.EntityManager;
-import org.ozis.entity.Context;
 import org.ozis.entity.Desigion;
 import org.ozis.util.HibernateUtil;
 
 import java.util.List;
 
-public class DesigionDao extends GenericRepository{
-    public DesigionDao(Class entityClass) {
-        super(entityClass);
+public class DesigionDao extends GenericRepository<Desigion,Integer>{
+    public DesigionDao(Class<Desigion> desigionClass) {
+        super(Desigion.class);
     }
 
     public List<Object[]> fingDesigionByProject(String project){

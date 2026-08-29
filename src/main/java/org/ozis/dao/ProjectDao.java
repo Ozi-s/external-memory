@@ -6,9 +6,9 @@ import org.ozis.util.HibernateUtil;
 
 import java.util.List;
 
-public class ProjectDao extends GenericRepository{
-    public ProjectDao(Class entityClass) {
-        super(entityClass);
+public class ProjectDao extends GenericRepository<Project,Integer>{
+    public ProjectDao(Class<Project> projectClass) {
+        super(Project.class);
     }
 
     public List<Project> findByName(String name) {

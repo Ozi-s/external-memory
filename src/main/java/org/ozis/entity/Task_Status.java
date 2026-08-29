@@ -1,7 +1,6 @@
 package org.ozis.entity;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -17,18 +16,18 @@ public class Task_Status {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "task_status")
+    @OneToMany(mappedBy = "task_status")   // ← исправлено: поле в Task называется taskStatus
     private List<Task> tasks;
 
-    public int getId() {
+    public Integer getId() {               // лучше Integer, чтобы избежать NPE
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -39,18 +38,18 @@ public class Task_Status {
         this.name = name;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
     @Override
     public String toString() {
         return "Task_Status{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
     }
 }

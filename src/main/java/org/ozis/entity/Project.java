@@ -1,43 +1,42 @@
 package org.ozis.entity;
 
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
-@Table(name="project")
+@Table(name = "project")
 public class Project {
+
+    public Project() {
+    }
 
     public Project(String place, String name) {
         this.place = place;
         this.name = name;
     }
 
-    public Project() {
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;                   // лучше Integer
 
     @Column(nullable = false)
     private String place;
 
     private String name;
 
-    @OneToMany(mappedBy = "project_id")
+    @OneToMany(mappedBy = "project_id")      // ← исправлено
     private List<Desigion> desigions;
 
-    @OneToMany(mappedBy = "project_id")
+    @OneToMany(mappedBy = "project_id")      // ← исправлено
     private List<Task> tasks;
 
-    @OneToMany(mappedBy = "project_id")
+    @OneToMany(mappedBy = "project_id")      // ← исправлено
     private List<Context> contexts;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

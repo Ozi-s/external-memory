@@ -8,9 +8,9 @@ import org.ozis.util.HibernateUtil;
 import java.time.LocalDate;
 import java.util.List;
 
-public class TaskDao extends GenericRepository{
-    public TaskDao(Class entityClass) {
-        super(entityClass);
+public class TaskDao extends GenericRepository<Task, Integer>{
+    public TaskDao(Class<Task> taskClass) {
+        super(Task.class);
     }
 
     public List<Object[]> findTaskByPoject(int project_id){

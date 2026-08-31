@@ -10,17 +10,29 @@ import javafx.scene.control.TextInputDialog;
 import java.util.Optional;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
+import org.ozis.dao.ProjectDao;
+import org.ozis.entity.Project;
+
 
 public class ProjectsView {
-
+    private static void refreshProjects() {
+        System.out.println("refreshProjects вызван");
+        projects.getChildren().clear();
+        List<Project> allProjects = projectDao.findAll();
+        System.out.println("Найдено проектов: " + allProjects.size());
+        for (Project p : allProjects) {
+            System.out.println("Добавляем проект: " + p.getName());
+            show_new_project(p.getName());
+        }
+    }
     static List<String> buffOfProjects = new ArrayList<>();
 
     static BorderPane LeftPanel = new BorderPane(); // левая панель
     static Label projectsTitle = new Label("Проекты:"); // Тайтл сверху
     static VBox projects = new VBox(10); // Лист проектов
     static Button projectAddBtn = new Button("+"); // кнопка добавить проект
-
-    public static BorderPane getLeftPanel(String[] projects_list) {
+    static ProjectDao projectDao=new ProjectDao(Project.class);
+    public static BorderPane getLeftPanel() {
         // левая панель 
         LeftPanel.setPadding(new Insets(20));
         LeftPanel.setMinWidth(220);
@@ -42,6 +54,7 @@ public class ProjectsView {
         projects.setStyle("-fx-background-color: #141414; ");
 
         // кнопка "добавить проект"
+
         projectAddBtn.setMaxWidth(Double.MAX_VALUE);
         projectAddBtn.setStyle("-fx-font-size: 22px; ");
         projectAddBtn.setOnAction(event -> {
@@ -51,14 +64,14 @@ public class ProjectsView {
 
             Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
-                show_new_project(result.get());
+                String projectName= result.get();
+                Project newProject=new Project("here",projectName);
+                projectDao.save(newProject);
+                refreshProjects();
             }
         });
 
-        for (String project : projects_list) {
-            buffOfProjects.add(project);
-            show_new_project(project);
-        }
+
 
         LeftPanel.setPadding(new Insets(10));
         LeftPanel.setTop(projectsTitle);

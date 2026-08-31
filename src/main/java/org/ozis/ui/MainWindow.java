@@ -23,7 +23,7 @@ public class MainWindow {
         // LeftSide
         // Левая панель с обёрткой для отступов от краёв
         leftPanel.setPadding(new Insets(10));
-        leftPanel.getChildren().add(ProjectsView.getLeftPanel(projects));
+        leftPanel.getChildren().add(ProjectsView.getLeftPanel());
         
         // RightSide
         // Верхняя панель с обёрткой для отступов от краёв

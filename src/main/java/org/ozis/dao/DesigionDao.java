@@ -11,43 +11,40 @@ public class DesigionDao extends GenericRepository<Desigion,Integer>{
         super(Desigion.class);
     }
 
-    public List<Object[]> fingDesigionByProject(String project){
+    public List<Desigion> fingDesigionByProject(String project){
         try(EntityManager em= HibernateUtil.createEntityManager()){
             return em.createQuery("""
-                    select d.id, d.name, d.alternative_desigion, d.dependent_task, d.project_id.name from Desigion where d.project_id.name like:project""").setParameter("project","%"+project+"%").getResultList();
+                    select d from Desigion where d.project_id.name like:project""", Desigion.class).setParameter("project","%"+project+"%").getResultList();
         }
     }
 
-    public List<Object[]> findDEsigionByTask(int task_id){
+    public List<Desigion> findDEsigionByTask(Integer task_id){
         try(EntityManager em=HibernateUtil.createEntityManager()){
             return em.createQuery("""
-                    select d.id, d.name, d.alternative_desigion, d.dependent_task, d.project_id.name from Desigion d where d.dependent_task=:task_id""").setParameter("task_id",task_id).getResultList();
+                    select d from Desigion d where d.dependent_task,id=:task_id""", Desigion.class).setParameter("task_id",task_id).getResultList();
         }
     }
 
-    public List<Object[]> findDesigionByStatus(String status){
+    public List<Desigion> findDesigionByStatus(String status){
         try(EntityManager em=HibernateUtil.createEntityManager()){
             return em.createQuery("""
-                    select d.id, d.name, d.alternative_desigion, d.dependent_task, d.project_id.name from Desigion d where d.desigion_status.name like :status""").setParameter("status","%"+ status+"%").getResultList();
+                    select d from Desigion d where d.status.name like :status""", Desigion.class).setParameter("status","%"+ status+"%").getResultList();
         }
     }
 
-    public List<Object[]> findDesigionByProjectAndStatus(String project, String status){
+    public List<Desigion> findDesigionByProjectAndStatus(String project, String status){
         try(EntityManager em=HibernateUtil.createEntityManager()){
             return em.createQuery("""
-                    select d.id, d.name, d.alternative_desigion, d.dependent_task, d.project_id.name from Desigion d where d.desigion_status.name like:status and d.project_id.name like:project""").setParameter("project","%"+project+"%").setParameter("status","%"+ status+"%").getResultList();
+                    select d from Desigion d where d.status.name like:status and d.project_id.name like:project""", Desigion.class).setParameter("project","%"+project+"%").setParameter("status","%"+ status+"%").getResultList();
         }
     }
 
-    public List<Object[]> findAlternativeDesigionsNative(Long desigionId) {//на sql в этом случае думалось лучше
+    public List<Desigion> findAlternativeDesigionsNative(Long desigionId) {//на sql в этом случае думалось лучше
         try (EntityManager em = HibernateUtil.createEntityManager()) {
             String sql = """
-            select d1.id, d1.name, d1.dependent_task, d1.project_id, d2.id, d2.name, d2.dependent_task, d2.project_id
-            from desigion d1
-            join desigion d2 ON d1.dependent_task = d2.dependent_task
-            where d1.id = :desigionId AND d1.id != d2.id
+            SELECT d2 FROM Desigion d1 JOIN Desigion d2 ON d1.dependent_task = d2.dependent_task WHERE d1.id = :id AND d1.id != d2.id
         """;
-            return em.createNativeQuery(sql)
+            return em.createNativeQuery(sql, Desigion.class)
                     .setParameter("desigionId", desigionId)
                     .getResultList();
         }

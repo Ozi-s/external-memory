@@ -8,14 +8,28 @@ import javafx.scene.layout.Region;
 
 public class TopPanel {
 
-    static HBox btn_container = new HBox();
+    private final HBox root = new HBox();
     
-    static Button all_btn = new Button("All");
-    static Button context_btn = new Button("Context");
-    static Button tasks_btn = new Button("Tasks");
-    static Button decisions_btn = new Button("Decisions");
+    private final Button all_btn = new Button("All");
+    private final Button context_btn = new Button("Context");
+    private final Button tasks_btn = new Button("Tasks");
+    private final Button decisions_btn = new Button("Decisions");
 
-    public static HBox get_btns() {
+    private void topPanel() {
+        setup();
+
+        // TODO:
+        // назначить каждой кнопке по функции из UiManager
+        
+        root.getChildren().addAll(all_btn, context_btn, tasks_btn, decisions_btn);
+    }
+
+    public HBox getRoot() {
+        topPanel();
+        return root;
+    }
+
+    private void setup() {
         String btn_style = """
             -fx-background-color: #7f49b4;
             -fx-text-fill: #cfcfcf;
@@ -28,15 +42,13 @@ public class TopPanel {
         tasks_btn.setStyle(btn_style);
         decisions_btn.setStyle(btn_style);
 
-        btn_container.setPadding(new Insets(5, 10, 5, 10));
-        btn_container.getChildren().addAll(all_btn, context_btn, tasks_btn, decisions_btn);
-        btn_container.setStyle("""
+        root.setPadding(new Insets(5, 10, 5, 10));
+        
+        root.setStyle("""
             -fx-background-color: #141414;
             -fx-background-radius: 12px; 
         """);
-        btn_container.setMaxWidth(Region.USE_PREF_SIZE);
-        btn_container.setMaxHeight(Region.USE_PREF_SIZE);
-        
-        return btn_container;
+        root.setMaxWidth(Region.USE_PREF_SIZE);
+        root.setMaxHeight(Region.USE_PREF_SIZE);
     }
 }

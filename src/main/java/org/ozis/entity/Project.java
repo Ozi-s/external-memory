@@ -54,10 +54,10 @@ public class Project {
         this.name = name;
     }
 
-    public List<Decision> getDesigions() {
+    public List<Decision> getDecisions() {
         return decisions;
     }
-    public void setDesigions(List<Decision> decisions) {
+    public void setDecisions(List<Decision> decisions) {
         this.decisions = decisions;
     }
 

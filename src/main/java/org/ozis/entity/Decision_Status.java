@@ -6,13 +6,13 @@ import java.util.List;
 
 @Entity
 @Table(name="desigion_status")
-public class Desigion_Status {
+public class Decision_Status {
 
-    public Desigion_Status(String name) {
+    public Decision_Status(String name) {
         this.name = name;
     }
 
-    public Desigion_Status() {
+    public Decision_Status() {
     }
 
     @Id
@@ -39,17 +39,17 @@ public class Desigion_Status {
         this.name = name;
     }
 
-    public List<Decision> getDesigions() {
+    public List<Decision> getDecisions() {
         return decisions;
     }
 
-    public void setDesigions(List<Decision> decisions) {
+    public void setDecisions(List<Decision> decisions) {
         this.decisions = decisions;
     }
 
     @Override
     public String toString() {
-        return "Desigion_Status{" +
+        return "Decision_Status{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';

@@ -1,14 +1,15 @@
 package org.ozis.dao;
 
 import jakarta.persistence.EntityManager;
-import org.ozis.entity.Desigion_Status;
+import org.ozis.entity.Decision_Status;
+import org.ozis.entity.Decision_Status;
 import org.ozis.util.HibernateUtil;
 import java.util.List;
 
-public class DeaStaDao extends GenericRepository<Desigion_Status, Integer> {
+public class DeaStaDao extends GenericRepository<Decision_Status, Integer> {
 
     // Конструктор теперь использует переданный класс
-    public DeaStaDao(Class<Desigion_Status> decisionStatusClass) {
+    public DeaStaDao(Class<Decision_Status> decisionStatusClass) {
         super(decisionStatusClass);
     }
 

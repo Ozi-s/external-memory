@@ -9,16 +9,16 @@ import java.util.List;
 @Table(name = "desigion")
 public class Decision {
 
-    public Decision(String name, String files, String context, String desigion_text, String reason, Desigion_Status status, Project project_id, Task dependent_task, Decision alternative_decision) {
+    public Decision(String name, String files, String context, String decision_text, String reason, Decision_Status status, Project project_id, Task dependent_task, Decision alternative_decision) {
         this.name = name;
         this.files = files;
         this.context = context;
-        this.desigion_text = desigion_text;
+        this.desigion_text = decision_text;
         this.reason = reason;
         this.status = status;
         this.project_id = project_id;
         this.dependent_task = dependent_task;
-        this.alternative_decision = alternative_decision;
+        this.alternative_desigion = alternative_decision;
     }
 
     public Decision() {
@@ -45,7 +45,7 @@ public class Decision {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "desigion_status")
-    private Desigion_Status status;
+    private Decision_Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
@@ -57,7 +57,7 @@ public class Decision {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="alternative_desigion")
-    private Decision alternative_decision;
+    private Decision alternative_desigion;
 
     @OneToMany(mappedBy = "alternative_desigion")
     private List<Decision> alternatives;
@@ -90,11 +90,11 @@ public class Decision {
         this.context = context;
     }
 
-    public String getDesigion_text() {
+    public String getDecision_text() {
         return desigion_text;
     }
-    public void setDesigion_text(String desigion_text) {
-        this.desigion_text = desigion_text;
+    public void setDecision_text(String decision_text) {
+        this.desigion_text = decision_text;
     }
 
     public String getReason() {
@@ -115,18 +115,18 @@ public class Decision {
         this.project_id = project_id;
     }
 
-    public Desigion_Status getStatus() {
+    public Decision_Status getStatus() {
         return status;
     }
-    public void setStatus(Desigion_Status status) {
+    public void setStatus(Decision_Status status) {
         this.status = status;
     }
 
-    public Decision getAlternative_desigion() {
-        return alternative_decision;
+    public Decision getAlternative_decision() {
+        return alternative_desigion;
     }
-    public void setAlternative_desigion(Decision alternative_decision) {
-        this.alternative_decision = alternative_decision;
+    public void setAlternative_decision(Decision alternative_decision) {
+        this.alternative_desigion = alternative_decision;
     }
 
     public List<Decision> getAlternatives() {
@@ -138,15 +138,15 @@ public class Decision {
 
     @Override
     public String toString() {
-        return "Desigion{" +
+        return "Decision{" +
                 "name='" + name + '\'' +
                 ", files='" + files + '\'' +
                 ", context='" + context + '\'' +
-                ", desigion_text='" + desigion_text + '\'' +
+                ", decision_text='" + desigion_text + '\'' +
                 ", reason='" + reason + '\'' +
                 ", status=" + status +
                 ", project=" + project_id +
-                ", alternative_desigion=" + alternative_decision +
+                ", alternative_decision=" + alternative_desigion +
                 ", dependent_task=" + dependent_task +
                 '}';
     }

@@ -93,10 +93,10 @@ public class Task {
         this.deadline = deadline;
     }
 
-    public List<Decision> getDesigions() {
+    public List<Decision> getDecisions() {
         return decisions;
     }
-    public void setDesigions(List<Decision> decisions) {
+    public void setDecisions(List<Decision> decisions) {
         this.decisions = decisions;
     }
 

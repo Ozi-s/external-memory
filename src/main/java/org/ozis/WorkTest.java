@@ -25,7 +25,7 @@ public class WorkTest {
             // Создаём сущности
             Task_Status taskStatus = new Task_Status("Совершенная");
             Project project = new Project("Офис", "Проект А");
-            Desigion_Status desigionStatus = new Desigion_Status("Разрабатывается");
+            Decision_Status decisionStatus = new Decision_Status("Разрабатывается");
             // Для контекста нужен проект, но пока не сохраняем, т.к. нет связи
 
             // Сохраняем через DAO (используем EntityManager, переданный в DAO)
@@ -33,7 +33,7 @@ public class WorkTest {
             // которые принимают EntityManager? Или просто сохраняем через em.persist()
             //em.persist(taskStatus);
             em.persist(project);
-            em.persist(desigionStatus);
+            em.persist(decisionStatus);
             // Если есть Context, то тоже сохраняем
 
             tx.commit();
@@ -48,7 +48,7 @@ public class WorkTest {
         // 3. Теперь выполняем проверки (каждая в своей транзакции, но можно и в одной)
         testTaskStatus();
         testProject();
-        testDesigionStatus();
+        testDecisionStatus();
         // testContext(); если есть данные
 
         System.out.println("\n========== ТЕСТ ЗАВЕРШЁН ==========");
@@ -96,22 +96,22 @@ public class WorkTest {
         sorted.forEach(System.out::println);
     }
 
-    private static void testDesigionStatus() {
-        DeaStaDao dao = new DeaStaDao(Desigion_Status.class);
-        System.out.println("\n======= ПРОВЕРКА Desigion_Status =======");
-        List<Desigion_Status> all = dao.findAll();
+    private static void testDecisionStatus() {
+        DeaStaDao dao = new DeaStaDao(Decision_Status.class);
+        System.out.println("\n======= ПРОВЕРКА Decision_Status =======");
+        List<Decision_Status> all = dao.findAll();
         System.out.println("--- findAll() ---");
         all.forEach(System.out::println);
 
         if (!all.isEmpty()) {
             Integer id = all.get(0).getId();
             System.out.println("--- findById(" + id + ") ---");
-            Optional<Desigion_Status> found = dao.findById(id);
+            Optional<Decision_Status> found = dao.findById(id);
             System.out.println(found);
         }
 
         System.out.println("--- findByName('работе') ---");
-        List<Desigion_Status> byName = dao.findByName("работе");
+        List<Decision_Status> byName = dao.findByName("работе");
         byName.forEach(System.out::println);
     }
 }

@@ -9,7 +9,7 @@ public class MainManager {
     
     public void start(Stage stage) {
         // подготовка данных
-        String[] projects = {"brain-dangeon","external-memory","minecraft-server"};
+        // String[] projects = {"brain-dangeon","external-memory","minecraft-server"};
         
         // инициализация интерфейса
         uiManager.init(stage);

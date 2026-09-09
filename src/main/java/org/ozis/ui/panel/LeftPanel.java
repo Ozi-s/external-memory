@@ -21,7 +21,7 @@ public class LeftPanel {
     private final Button projectButton = new Button("+");
 
     // получаем UiManager
-    private leftPanel() {
+    public LeftPanel() {
         refreshProjects();
         setup();
     
@@ -45,7 +45,6 @@ public class LeftPanel {
     }
 
     public BorderPane getRoot() {
-        leftPanel();
         return root;
     }
 

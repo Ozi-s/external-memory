@@ -17,7 +17,7 @@ import org.ozis.ui.panel.InfoPanel;
 
 public class UiManager {
 
-    private String currentTab;
+    //rivate String currentTab;
 
     private final TaskDao taskDao = new TaskDao(Task.class);
     private final ContextDao contextDao = new ContextDao(Context.class);

@@ -49,7 +49,7 @@ public class Task {
     private Project project_id;
 
     @OneToMany(mappedBy = "dependent_task")
-    private List<Desigion> desigions;
+    private List<Decision> decisions;
 
     public int getId() {
         return id;
@@ -93,11 +93,11 @@ public class Task {
         this.deadline = deadline;
     }
 
-    public List<Desigion> getDesigions() {
-        return desigions;
+    public List<Decision> getDesigions() {
+        return decisions;
     }
-    public void setDesigions(List<Desigion> desigions) {
-        this.desigions = desigions;
+    public void setDesigions(List<Decision> decisions) {
+        this.decisions = decisions;
     }
 
     public Project getProject_id() {

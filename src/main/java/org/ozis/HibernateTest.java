@@ -6,9 +6,11 @@ import org.hibernate.query.Query;
 import org.ozis.util.HibernateUtil;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class HibernateTest {
     public static void main(String[] args) {
+        Scanner scanner=new Scanner(System.in);
         // Получаем фабрику сессий
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         System.out.println("✅ SessionFactory создана успешно!");

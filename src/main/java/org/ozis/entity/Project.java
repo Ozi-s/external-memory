@@ -25,7 +25,7 @@ public class Project {
     private String name;
 
     @OneToMany(mappedBy = "project_id")      // ← исправлено
-    private List<Desigion> desigions;
+    private List<Decision> decisions;
 
     @OneToMany(mappedBy = "project_id")      // ← исправлено
     private List<Task> tasks;
@@ -54,11 +54,11 @@ public class Project {
         this.name = name;
     }
 
-    public List<Desigion> getDesigions() {
-        return desigions;
+    public List<Decision> getDesigions() {
+        return decisions;
     }
-    public void setDesigions(List<Desigion> desigions) {
-        this.desigions = desigions;
+    public void setDesigions(List<Decision> decisions) {
+        this.decisions = decisions;
     }
 
     public List<Task> getTasks() {

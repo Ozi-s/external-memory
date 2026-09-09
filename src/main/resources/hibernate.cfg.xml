@@ -27,7 +27,7 @@
         <mapping class="org.ozis.entity.Task_Status"/>
         <mapping class="org.ozis.entity.Desigion_Status"/>
         <mapping class="org.ozis.entity.Task"/>
-        <mapping class="org.ozis.entity.Desigion"/>
+        <mapping class="org.ozis.entity.Decision"/>
         <mapping class="org.ozis.entity.Context"/>
         <mapping class="org.ozis.entity.Project"/>
     </session-factory>

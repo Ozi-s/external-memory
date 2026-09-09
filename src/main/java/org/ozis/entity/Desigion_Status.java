@@ -23,7 +23,7 @@ public class Desigion_Status {
     private String name;
 
     @OneToMany(mappedBy = "status")   // ← исправлено
-    private List<Desigion> desigions;
+    private List<Decision> decisions;
 
     public int getId() {
         return id;
@@ -39,12 +39,12 @@ public class Desigion_Status {
         this.name = name;
     }
 
-    public List<Desigion> getDesigions() {
-        return desigions;
+    public List<Decision> getDesigions() {
+        return decisions;
     }
 
-    public void setDesigions(List<Desigion> desigions) {
-        this.desigions = desigions;
+    public void setDesigions(List<Decision> decisions) {
+        this.decisions = decisions;
     }
 
     @Override

@@ -7,9 +7,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "desigion")
-public class Desigion {
+public class Decision {
 
-    public Desigion(String name, String files, String context, String desigion_text, String reason, Desigion_Status status, Project project_id, Task dependent_task, Desigion alternative_desigion) {
+    public Decision(String name, String files, String context, String desigion_text, String reason, Desigion_Status status, Project project_id, Task dependent_task, Decision alternative_decision) {
         this.name = name;
         this.files = files;
         this.context = context;
@@ -18,10 +18,10 @@ public class Desigion {
         this.status = status;
         this.project_id = project_id;
         this.dependent_task = dependent_task;
-        this.alternative_desigion = alternative_desigion;
+        this.alternative_decision = alternative_decision;
     }
 
-    public Desigion() {
+    public Decision() {
     }
 
     @Id
@@ -57,10 +57,10 @@ public class Desigion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="alternative_desigion")
-    private Desigion alternative_desigion;
+    private Decision alternative_decision;
 
     @OneToMany(mappedBy = "alternative_desigion")
-    private List<Desigion> alternatives;
+    private List<Decision> alternatives;
 
     public int getId() {
         return id;
@@ -122,17 +122,17 @@ public class Desigion {
         this.status = status;
     }
 
-    public Desigion getAlternative_desigion() {
-        return alternative_desigion;
+    public Decision getAlternative_desigion() {
+        return alternative_decision;
     }
-    public void setAlternative_desigion(Desigion alternative_desigion) {
-        this.alternative_desigion = alternative_desigion;
+    public void setAlternative_desigion(Decision alternative_decision) {
+        this.alternative_decision = alternative_decision;
     }
 
-    public List<Desigion> getAlternatives() {
+    public List<Decision> getAlternatives() {
         return alternatives;
     }
-    public void setAlternatives(List<Desigion> alternatives) {
+    public void setAlternatives(List<Decision> alternatives) {
         this.alternatives = alternatives;
     }
 
@@ -146,7 +146,7 @@ public class Desigion {
                 ", reason='" + reason + '\'' +
                 ", status=" + status +
                 ", project=" + project_id +
-                ", alternative_desigion=" + alternative_desigion +
+                ", alternative_desigion=" + alternative_decision +
                 ", dependent_task=" + dependent_task +
                 '}';
     }

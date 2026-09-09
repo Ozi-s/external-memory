@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 
 import org.ozis.entity.Task;
@@ -46,12 +45,12 @@ public class AllView {
         rootScroll.setContent(root);
     }
 
-    public ScrollPane getRoot() { return root_s; }
+    public ScrollPane getRoot() { return rootScroll; }
     
     private void setup() {
-        rootSroll.setFitToWidth(true);
-        rootSroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        rootSroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        rootScroll.setFitToWidth(true);
+        rootScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        rootScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         taskListScroll.setFitToWidth(true);
         taskListScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);

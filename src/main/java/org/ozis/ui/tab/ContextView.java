@@ -13,7 +13,7 @@ public class ContextView {
     private final GridPane root = new GridPane();
     private final VBox btnContainer = new VBox();
     
-    private final TextArea context = new TextArea();
+    private final TextArea contextArea = new TextArea();
     private final Button editBtn = new Button("Edit");
     private final Button addNewContextBtn = new Button("Add new Context");
     private final Button lastContextBtn = new Button("See previous contexts");
@@ -24,7 +24,7 @@ public class ContextView {
         setup();
 
         btnContainer.getChildren().addAll(editBtn, addNewContextBtn, lastContextBtn);
-        root.add(context, 0, 0);
+        root.add(contextArea, 0, 0);
         root.add(btnContainer, 1, 0);
     }
 

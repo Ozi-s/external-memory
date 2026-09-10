@@ -1,5 +1,7 @@
 package org.ozis.ui;
 
+import java.util.List;
+
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.geometry.Insets;
@@ -11,28 +13,32 @@ import org.ozis.dao.TaskDao;
 import org.ozis.entity.Task;
 import org.ozis.dao.ContextDao;
 import org.ozis.entity.Context;
-import org.ozis.ui.panel.LeftPanel;
-import org.ozis.ui.panel.TopPanel;
-import org.ozis.ui.panel.InfoPanel;
+import org.ozis.dao.ProjectDao;
+import org.ozis.entity.Project;
+
+import org.ozis.ui.panel.*;
+
+import org.ozis.ui.tab.*;
 
 public class UiManager {
 
-    //rivate String currentTab;
+    private String currentTab;
 
     private final TaskDao taskDao = new TaskDao(Task.class);
     private final ContextDao contextDao = new ContextDao(Context.class);
+    private final ProjectDao projectDao = new ProjectDao(Project.class);
 
     private final GridPane root = new GridPane(); 
-    private final LeftPanel leftPanel = new LeftPanel();
+    
+    private final LeftPanel leftPanel = new LeftPanel(new ActionsHandler());
     private final TopPanel topPanel = new TopPanel();
     private final InfoPanel infoPanel = new InfoPanel();
     
     public void init(Stage stage) {
+        root.getChildren().clear();
         setup();
 
         root.add(leftPanel.getRoot(), 0, 0);
-        root.add(topPanel.getRoot(), 1, 0);
-        root.add(infoPanel.getRoot(), 1, 1);
         GridPane.setRowSpan(leftPanel.getRoot(), 2);
         
         Scene scene = new Scene(root);
@@ -54,5 +60,22 @@ public class UiManager {
         root.getColumnConstraints().addAll(col1, col2);
         root.getRowConstraints().addAll(row1, row2);
         
+    }
+
+    public class ActionsHandler {
+
+        public void projectAction(String projectName) {
+            if (projectName == null) { return; }
+            root.getChildren().clear();
+            List<Project> projects = projectDao.findByName(projectName);
+            
+            AllView allView = new AllView(taskDao.findTaskByPoject(projects.get(0).getId()));
+            currentTab = "All";
+
+            infoPanel.setContent(allView.getRoot());
+            root.add(leftPanel.getRoot(), 0, 0);
+            root.add(topPanel.getRoot(), 1, 0);
+            root.add(infoPanel.getRoot(), 1, 1);
+        }
     }
 }

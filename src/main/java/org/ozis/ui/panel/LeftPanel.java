@@ -11,9 +11,11 @@ import java.util.Optional;
 
 import org.ozis.dao.ProjectDao;
 import org.ozis.entity.Project;
+import org.ozis.ui.UiManager.ActionsHandler;
 
 public class LeftPanel {
     private final ProjectDao projectDao = new ProjectDao(Project.class);
+    private ActionsHandler actionHandler;
 
     private final BorderPane root = new BorderPane();
     private final VBox projectList = new VBox(10);
@@ -21,10 +23,11 @@ public class LeftPanel {
     private final Button projectButton = new Button("+");
 
     // получаем UiManager
-    public LeftPanel() {
+    public LeftPanel(ActionsHandler actionHandler) {
         refreshProjects();
         setup();
-    
+        this.actionHandler = actionHandler;
+        
         projectButton.setOnAction(event -> {
             TextInputDialog dialog = new TextInputDialog("");
             dialog.setTitle("Добавить новый проект");
@@ -71,6 +74,12 @@ public class LeftPanel {
         """);
         projectBtn.setOnMousePressed(e -> projectBtn.setStyle(projectBtn.getStyle().replace("#7f49b4", "#68399a")));
         projectBtn.setOnMouseReleased(e -> projectBtn.setStyle(projectBtn.getStyle().replace("#68399a", "#7f49b4")));
+        
+        projectBtn.setOnAction(event -> {
+            System.out.println("Открываю проект : " + project_name);
+            actionHandler.projectAction(project_name);
+        });
+        
         projectList.getChildren().add(projectBtn);
     }
 

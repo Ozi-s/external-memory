@@ -2,7 +2,6 @@ package org.ozis.ui.tab;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.geometry.Insets;
@@ -24,6 +23,7 @@ public class ContextView {
         setup();
 
         btnContainer.getChildren().addAll(editBtn, addNewContextBtn, lastContextBtn);
+        
         root.add(contextArea, 0, 0);
         root.add(btnContainer, 1, 0);
     }
@@ -42,5 +42,20 @@ public class ContextView {
         root.getColumnConstraints().addAll(col1, col2);
 
         btnContainer.setPadding(new Insets(10));
+    }
+
+    private void setupActions() {
+
+        editBtn.setOnAction(event -> {
+            System.out.println("Редактирование Context");
+        });
+
+        addNewContextBtn.setOnAction(event -> {
+            System.out.println("Добавление нового Context");
+        });
+
+        lastContextBtn.setOnAction(event -> {
+            System.out.println("Открываем историю Context");
+        });
     }
 }

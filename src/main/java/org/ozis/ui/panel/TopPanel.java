@@ -15,7 +15,7 @@ public class TopPanel {
     private final Button tasks_btn = new Button("Tasks");
     private final Button decisions_btn = new Button("Decisions");
 
-    private void topPanel() {
+    public TopPanel() {
         setup();
 
         // TODO:
@@ -25,7 +25,6 @@ public class TopPanel {
     }
 
     public HBox getRoot() {
-        topPanel();
         return root;
     }
 

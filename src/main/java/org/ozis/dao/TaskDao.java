@@ -19,9 +19,19 @@ public class TaskDao extends GenericRepository<Task, Integer>{
                     select t
                     from Task t
                     join fetch t.task_status
-                    where t.project_id=:project_id """).setParameter("project_id", project_id).getResultList();
+                    where t.project_id.id=:project_id """).setParameter("project_id", project_id).getResultList();
         }
     }
+
+    // public List<Task> findTaskByPoject(int project_id){
+    //     try(EntityManager em= HibernateUtil.createEntityManager()){
+    //         return em.createQuery("""
+    //                 select t
+    //                 from Task t
+    //                 join fetch t.task_status
+    //                 where t.project_id=:project_id """).setParameter("project_id", project_id).getResultList();
+    //     }
+    // }
 
     public List<Task> findTaskByStatus(String status){
         try(EntityManager em=HibernateUtil.createEntityManager()){

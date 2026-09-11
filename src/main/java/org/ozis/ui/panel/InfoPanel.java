@@ -1,8 +1,10 @@
 package org.ozis.ui.panel;
 
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
 import javafx.scene.Node;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 public class InfoPanel {
 

@@ -7,6 +7,8 @@ import javafx.scene.control.TextArea;
 import javafx.geometry.Insets;
 import javafx.scene.layout.ColumnConstraints;
 
+import org.ozis.entity.Context;
+
 public class ContextView {
 
     private final GridPane root = new GridPane();
@@ -19,10 +21,15 @@ public class ContextView {
     // private final Button startNewSessionBtn = new Button();
     // private final Button lastSessionsBtn = new Button();
 
-    public ContextView() {
+    public ContextView(Context context) {
         setup();
 
         btnContainer.getChildren().addAll(editBtn, addNewContextBtn, lastContextBtn);
+        contextArea.setText(
+            "To do:\n" + context.getTo_do() +
+            "\n\nIn progress:\n" + context.getIn_progress() +
+            "\n\nThink:\n" + context.getThink()
+        );
         
         root.add(contextArea, 0, 0);
         root.add(btnContainer, 1, 0);
@@ -33,6 +40,7 @@ public class ContextView {
     }
 
     private void setup() {
+        setupActions();
         root.setHgap(10);
         root.setVgap(10);
         root.setPadding(new Insets(20));

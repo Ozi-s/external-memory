@@ -9,12 +9,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.ColumnConstraints;
 
 import org.ozis.entity.Task;
 
 public class AllView {
 
-    private final ScrollPane rootScroll = new ScrollPane();
     private final ScrollPane taskListScroll = new ScrollPane();
     private final ScrollPane sessionListScroll = new ScrollPane();
 
@@ -41,16 +41,15 @@ public class AllView {
         root.add(sessionListScroll, 1, 0);
         root.add(context, 0, 1);
         GridPane.setColumnSpan(context, 2);
-
-        rootScroll.setContent(root);
     }
 
-    public ScrollPane getRoot() { return rootScroll; }
+    public GridPane getRoot() { return root; }
     
     private void setup() {
-        rootScroll.setFitToWidth(true);
-        rootScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        rootScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        // rootScroll.setFitToWidth(true);
+        // rootScroll.setFitToHeight(true);
+        // rootScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        // rootScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         taskListScroll.setFitToWidth(true);
         taskListScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -64,9 +63,13 @@ public class AllView {
         root.setVgap(10);
         root.setPadding(new Insets(20));
 
-        RowConstraints row1 = new RowConstraints(); row1.setPercentHeight(50);
-        RowConstraints row2 = new RowConstraints(); row2.setPercentHeight(50);
+        RowConstraints row1 = new RowConstraints(); row1.setPercentHeight(40);
+        RowConstraints row2 = new RowConstraints(); row2.setPercentHeight(60);
         root.getRowConstraints().addAll(row1, row2);
+        
+        ColumnConstraints col1 = new ColumnConstraints(); col1.setPercentWidth(50);
+        ColumnConstraints col2 = new ColumnConstraints(); col2.setPercentWidth(50);
+        root.getColumnConstraints().addAll(col1, col2);
         
         // activiti_log_s.setFitToWidth(true);
         // activiti_log_s.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);

@@ -28,7 +28,7 @@ public class TaskView {
     private final Map<String, VBox> taskContainers = new HashMap<>();
     private final Map<String, ScrollPane> taskScrolls = new HashMap<>();
 
-    public TaskView(List<Task_Status> taskStatusList, List<Task> taskList) {
+    public TaskView(List<Task_Status> taskStatusList, List<Task> taskList) { // нужны Все статусы задач; Все задачи конкретного проекта.
         setup();
 
         // Создаём колонки статусов

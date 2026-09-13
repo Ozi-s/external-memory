@@ -27,6 +27,7 @@ import org.ozis.entity.Project;
 import org.ozis.ui.panel.*;
 
 import org.ozis.ui.tab.*;
+import org.ozis.ui.window.AddTaskWindow;
 
 public class UiManager {
 
@@ -44,6 +45,9 @@ public class UiManager {
     private final LeftPanel leftPanel = new LeftPanel(actionHandler);
     private final TopPanel topPanel = new TopPanel(actionHandler);
     private final InfoPanel infoPanel = new InfoPanel();
+
+    private final Task_Status status = tasStaDao.findByName("Новая").get(0);
+    private final AddTaskWindow taskWindow = new AddTaskWindow(taskDao, tasStaDao.findAll(), status, currentProject);
     
     public void init(Stage stage) {
         root.getChildren().clear();
@@ -56,6 +60,8 @@ public class UiManager {
         stage.setTitle("External-Memory");
         stage.setScene(scene);
         stage.show();
+
+        taskWindow.show();
     }
 
     private void setup() {

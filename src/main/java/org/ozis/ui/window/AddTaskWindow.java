@@ -43,7 +43,8 @@ public class AddTaskWindow {
     private final ComboBox<String> statusBox = new ComboBox<>();
     private final Label executionPeriodLabel = new Label("Task execution period");
     private final Spinner<Integer> executionPeriodBox = new Spinner<>(1, Integer.MAX_VALUE, 1);
-    
+
+    private final Label filesPaneLabel = new Label("Task files");
     private final FlowPane filesPane = new FlowPane(5, 5);
     private final Button addFileBtn = new Button("+");
     
@@ -62,8 +63,8 @@ public class AddTaskWindow {
         }
         statusBox.getSelectionModel().select(selected_status.getName());
 
-        root.setRight(fieldsContainer);
-        root.setLeft(btnContainer);
+        root.setLeft(fieldsContainer);
+        root.setRight(btnContainer);
     }
 
     private void setup() {
@@ -85,6 +86,7 @@ public class AddTaskWindow {
             deadlineLabel,
             deadlinePicker,
 
+            filesPaneLabel,
             filesPane
         );
         btnContainer.getChildren().addAll(
@@ -96,7 +98,7 @@ public class AddTaskWindow {
         btnContainer.setAlignment(Pos.CENTER);
 
         VBox.setMargin(statusLabel, new Insets(10, 0, 0, 0));
-        VBox.setMargin(filesPane, new Insets(10, 0, 0, 0));
+        VBox.setMargin(filesPaneLabel, new Insets(10, 0, 0, 0));
     
         Scene scene = new Scene(root, 600, 300);
         stage.setTitle("Add Task");

@@ -13,6 +13,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.geometry.Pos;
 
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
@@ -23,6 +26,7 @@ public class TaskView {
 
     private final GridPane root = new GridPane();
     private final GridPane taskBoard = new GridPane();
+    // private final область под логи. 
 
     // Контейнеры задач для каждого статуса
     private final Map<String, VBox> taskContainers = new HashMap<>();
@@ -37,6 +41,8 @@ public class TaskView {
 
         // Добавляем доску в основной контейнер
         root.add(taskBoard, 0, 0);
+        // TODO:
+        // добавить область для логов
 
         // Передаём root в ScrollPane
         rootScroll.setContent(root);
@@ -46,30 +52,49 @@ public class TaskView {
 
     private void setup() {
         rootScroll.setFitToWidth(true);
+        rootScroll.setFitToHeight(true);
         rootScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         rootScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
+
         root.setHgap(10);
         root.setVgap(10);
         root.setPadding(new Insets(20));
-        
+
         taskBoard.setHgap(10);
         taskBoard.setVgap(10);
         taskBoard.setPadding(new Insets(10));
 
-        RowConstraints row1 = new RowConstraints();
-        row1.setVgrow(Priority.ALWAYS);
+        taskBoard.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        taskBoard.setStyle("""
+            -fx-grid-lines-visible: true;
+        """);
+
+        RowConstraints headerRow = new RowConstraints();
+        headerRow.setPrefHeight(35);
+
+        RowConstraints taskRow = new RowConstraints();
+        taskRow.setVgrow(Priority.ALWAYS);
+
+        RowConstraints addRow = new RowConstraints();
+        addRow.setPrefHeight(35);
 
         taskBoard.getRowConstraints().addAll(
-            new RowConstraints(),
-            row1,
-            new RowConstraints()
+            headerRow,
+            taskRow,
+            addRow
         );
 
-        ColumnConstraints filterColumn = new ColumnConstraints();
-        filterColumn.setMinWidth(100);
+        GridPane.setHgrow(taskBoard, Priority.ALWAYS);
+        GridPane.setVgrow(taskBoard, Priority.ALWAYS);
+        
+        // RowConstraints boardRow = new RowConstraints(); boardRow.setPercentHeight(70);
+        // RowConstraints logRow = new RowConstraints(); logRow.setPercentHeight(30);
 
-        taskBoard.getColumnConstraints().add(filterColumn);
+        // root.getRowConstraints().addAll(boardRow, logRow);
+
+        // GridPane.setHgrow(log, Priority.ALWAYS);
+        // GridPane.setVgrow(log, Priority.ALWAYS);
     }
 
     private void createStatusColumns(List<Task_Status> taskStatusList) {
@@ -86,10 +111,22 @@ public class TaskView {
             weekButton,
             monthButton
         );
+        filterBox.setAlignment(Pos.CENTER);
+        
+        taskBoard.add(filterBox, 0, 1);
 
-        taskBoard.add(filterBox, 0, 0);
+        GridPane.setHalignment(filterBox, HPos.CENTER);
+        GridPane.setValignment(filterBox, VPos.CENTER);
+        
+        ColumnConstraints filterColumn = new ColumnConstraints(); filterColumn.setPercentWidth(12);
+        taskBoard.getColumnConstraints().add(filterColumn);
         
         for (int i = 0; i < taskStatusList.size(); i++) {
+            ColumnConstraints statusColumn = new ColumnConstraints();
+            statusColumn.setPercentWidth(88.0 / taskStatusList.size());
+
+            taskBoard.getColumnConstraints().add(statusColumn);
+            
             Task_Status status = taskStatusList.get(i);
             int column = i + 1;
 
@@ -106,10 +143,18 @@ public class TaskView {
 
             // Добавляем заголовок
             taskBoard.add(statusLabel, column, 0);
+            GridPane.setHalignment(statusLabel, HPos.CENTER);
+            GridPane.setValignment(statusLabel, VPos.CENTER);
             // Добавляем контейнер задач
             taskBoard.add(tasksContainerArea, column, 1);
+
+            GridPane.setHgrow(tasksContainerArea, Priority.ALWAYS);
+            GridPane.setVgrow(tasksContainerArea, Priority.ALWAYS);
+            
             // Добавляем кнопку
             taskBoard.add(addTaskButton, column, 2);
+            GridPane.setHalignment(addTaskButton, HPos.CENTER);
+            GridPane.setValignment(addTaskButton, VPos.CENTER);
         }
     }
 

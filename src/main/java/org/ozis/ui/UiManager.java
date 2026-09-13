@@ -20,7 +20,6 @@ import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
 import org.ozis.dao.ContextDao;
 import org.ozis.entity.Context;
-import org.ozis.entity.Decision;
 import org.ozis.dao.ProjectDao;
 import org.ozis.dao.TasStaDao;
 import org.ozis.entity.Project;
@@ -64,8 +63,8 @@ public class UiManager {
         root.setVgap(10);
         root.setPadding(new Insets(20));
     
-        ColumnConstraints col1 = new ColumnConstraints(); col1.setPercentWidth(30);
-        ColumnConstraints col2 = new ColumnConstraints(); col2.setPercentWidth(70);
+        ColumnConstraints col1 = new ColumnConstraints(); col1.setPercentWidth(20);
+        ColumnConstraints col2 = new ColumnConstraints(); col2.setPercentWidth(80);
         
         RowConstraints row1 = new RowConstraints();
         row1.setMinHeight(Region.USE_PREF_SIZE);

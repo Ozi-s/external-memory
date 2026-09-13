@@ -45,10 +45,13 @@ public class ContextView {
         root.setVgap(10);
         root.setPadding(new Insets(20));
     
-        ColumnConstraints col1 = new ColumnConstraints(); col1.setPercentWidth(75);
-        ColumnConstraints col2 = new ColumnConstraints(); col2.setPercentWidth(25);
+        ColumnConstraints col1 = new ColumnConstraints(); col1.setPercentWidth(70);
+        ColumnConstraints col2 = new ColumnConstraints(); col2.setPercentWidth(30);
         root.getColumnConstraints().addAll(col1, col2);
 
+        contextArea.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        btnContainer.setMaxHeight(Double.MAX_VALUE);
+        
         btnContainer.setPadding(new Insets(10));
     }
 

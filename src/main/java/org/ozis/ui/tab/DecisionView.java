@@ -62,5 +62,8 @@ public class DecisionView {
         ColumnConstraints col1 = new ColumnConstraints(); col1.setPercentWidth(25);
         ColumnConstraints col2 = new ColumnConstraints(); col2.setPercentWidth(75);
         root.getColumnConstraints().addAll(col1, col2);
+
+        decisionTree.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        decisionArea.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     }
 }

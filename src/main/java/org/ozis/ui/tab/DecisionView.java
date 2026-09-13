@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import org.ozis.entity.Decision;
 
@@ -65,5 +66,13 @@ public class DecisionView {
 
         decisionTree.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         decisionArea.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        GridPane.setHgrow(decisionTree, Priority.ALWAYS);
+        GridPane.setVgrow(decisionTree, Priority.ALWAYS);
+
+        GridPane.setHgrow(decisionArea, Priority.ALWAYS);
+        GridPane.setVgrow(decisionArea, Priority.ALWAYS);
+
+        root.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
     }
 }

@@ -140,7 +140,6 @@ public class TaskView {
             taskContainers.put(statusName, tasksContainer);
             taskScrolls.put(statusName, tasksContainerArea);
 
-
             // Добавляем заголовок
             taskBoard.add(statusLabel, column, 0);
             GridPane.setHalignment(statusLabel, HPos.CENTER);
@@ -179,20 +178,24 @@ public class TaskView {
     private void addTasks(List<Task> taskList) {
 
         for (Task task : taskList) {
-            // Получаем статус задачи
-            Task_Status status = task.getTask_status();
-            String statusName = status.getName();
-            
-            // Находим VBox этого статуса
-            VBox container = taskContainers.get(statusName);
-
-            if (container == null) { continue; }
-
-            Button taskButton = new Button(task.getName());
-            container.getChildren().add(taskButton);
+            addTask(task);
         }
     }
 
+    public void addTask(Task task) {
+        // Получаем статус задачи
+        Task_Status status = task.getTask_status();
+        String statusName = status.getName();
+        
+        // Находим VBox этого статуса
+        VBox container = taskContainers.get(statusName);
+
+        if (container == null) { return; }
+
+        Button taskButton = new Button(task.getName());
+            container.getChildren().add(taskButton);
+    }
+    
     private Button createTaskBtn(String statusName) {
 
         Button button = new Button("+ Add task");

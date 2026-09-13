@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.geometry.Insets;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
 
 import org.ozis.entity.Context;
 
@@ -50,7 +51,13 @@ public class ContextView {
         root.getColumnConstraints().addAll(col1, col2);
 
         contextArea.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        btnContainer.setMaxHeight(Double.MAX_VALUE);
+        btnContainer.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        GridPane.setHgrow(contextArea, Priority.ALWAYS);
+        GridPane.setVgrow(contextArea, Priority.ALWAYS);
+
+        GridPane.setHgrow(btnContainer, Priority.ALWAYS);
+        GridPane.setVgrow(btnContainer, Priority.ALWAYS);
         
         btnContainer.setPadding(new Insets(10));
     }

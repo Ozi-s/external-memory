@@ -24,7 +24,7 @@ public class Project {
 
     private String name;
 
-    @OneToMany(mappedBy = "project_id")      // ← исправлено
+    @OneToMany(mappedBy = "project")      // ← исправлено
     private List<Decision> decisions;
 
     @OneToMany(mappedBy = "project_id")      // ← исправлено

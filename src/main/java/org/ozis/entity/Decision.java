@@ -4,29 +4,13 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-
 @Entity
-@Table(name = "desigion")
+@Table(name = "decision")
 public class Decision {
-
-    public Decision(String name, String files, String context, String decision_text, String reason, Decision_Status status, Project project_id, Task dependent_task, Decision alternative_decision) {
-        this.name = name;
-        this.files = files;
-        this.context = context;
-        this.desigion_text = decision_text;
-        this.reason = reason;
-        this.status = status;
-        this.project_id = project_id;
-        this.dependent_task = dependent_task;
-        this.alternative_desigion = alternative_decision;
-    }
-
-    public Decision() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
@@ -37,117 +21,145 @@ public class Decision {
     @Column(nullable = false)
     private String context;
 
-    @Column(nullable = false)
-    private String desigion_text;
+    @Column(name = "decision_text", nullable = false)
+    private String decisionText;
 
     @Column(nullable = false)
     private String reason;
 
+    // Статус решения
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "desigion_status")
+    @JoinColumn(name = "decision_status", nullable = false)
     private Decision_Status status;
 
+    // Проект
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    private Project project_id;
+    private Project project;
 
+    // Зависимая задача
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="dependent_task")
-    private Task dependent_task;
+    @JoinColumn(name = "dependent_task")
+    private Task dependentTask;
 
+    // Альтернативное решение
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="alternative_desigion")
-    private Decision alternative_desigion;
+    @JoinColumn(name = "alternative_decision")
+    private Decision alternativeDecision;
 
-    @OneToMany(mappedBy = "alternative_desigion")
+    // Решения, для которых данное решение является альтернативой
+    @OneToMany(mappedBy = "alternativeDecision", fetch = FetchType.LAZY)
     private List<Decision> alternatives;
 
-    public int getId() {
+
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+
+    public void setId(Integer id) {
         this.id = id;
     }
+
 
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
 
+
     public String getFiles() {
         return files;
     }
+
     public void setFiles(String files) {
         this.files = files;
     }
 
+
     public String getContext() {
         return context;
     }
+
     public void setContext(String context) {
         this.context = context;
     }
 
-    public String getDecision_text() {
-        return desigion_text;
+
+    public String getDecisionText() {
+        return decisionText;
     }
-    public void setDecision_text(String decision_text) {
-        this.desigion_text = decision_text;
+
+    public void setDecisionText(String decisionText) {
+        this.decisionText = decisionText;
     }
+
 
     public String getReason() {
         return reason;
     }
+
     public void setReason(String reason) {
         this.reason = reason;
     }
 
-    public void setDependent_task(Task dependent_task) {
-        this.dependent_task = dependent_task;
-    }
-
-    public Project getProject_id() {
-        return project_id;
-    }
-    public void setProject_id(Project project_id) {
-        this.project_id = project_id;
-    }
 
     public Decision_Status getStatus() {
         return status;
     }
+
     public void setStatus(Decision_Status status) {
         this.status = status;
     }
 
-    public Decision getAlternative_decision() {
-        return alternative_desigion;
+
+    public Project getProject() {
+        return project;
     }
-    public void setAlternative_decision(Decision alternative_decision) {
-        this.alternative_desigion = alternative_decision;
+
+    public void setProject(Project project) {
+        this.project = project;
     }
+
+
+    public Task getDependentTask() {
+        return dependentTask;
+    }
+
+    public void setDependentTask(Task dependentTask) {
+        this.dependentTask = dependentTask;
+    }
+
+
+    public Decision getAlternativeDecision() {
+        return alternativeDecision;
+    }
+
+    public void setAlternativeDecision(Decision alternativeDecision) {
+        this.alternativeDecision = alternativeDecision;
+    }
+
 
     public List<Decision> getAlternatives() {
         return alternatives;
     }
+
     public void setAlternatives(List<Decision> alternatives) {
         this.alternatives = alternatives;
     }
 
+
     @Override
     public String toString() {
         return "Decision{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", files='" + files + '\'' +
                 ", context='" + context + '\'' +
-                ", decision_text='" + desigion_text + '\'' +
+                ", decisionText='" + decisionText + '\'' +
                 ", reason='" + reason + '\'' +
-                ", status=" + status +
-                ", project=" + project_id +
-                ", alternative_decision=" + alternative_desigion +
-                ", dependent_task=" + dependent_task +
                 '}';
     }
 }

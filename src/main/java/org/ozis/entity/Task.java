@@ -48,7 +48,7 @@ public class Task {
     @JoinColumn(name="project_id")
     private Project project_id;
 
-    @OneToMany(mappedBy = "dependent_task")
+    @OneToMany(mappedBy = "dependentTask")
     private List<Decision> decisions;
 
     public int getId() {

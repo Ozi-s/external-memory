@@ -33,7 +33,7 @@ public class UiManager {
 
     public String currentTab;
     public Project currentProject;
-    private final ActionsHandler actionHandler = new ActionsHandler();
+    private final ActionsHandler actionsHandler = new ActionsHandler();
 
     private final TaskDao taskDao = new TaskDao(Task.class);
     private final TasStaDao tasStaDao = new TasStaDao(Task_Status.class);
@@ -42,12 +42,9 @@ public class UiManager {
 
     private final GridPane root = new GridPane(); 
     
-    private final LeftPanel leftPanel = new LeftPanel(actionHandler);
-    private final TopPanel topPanel = new TopPanel(actionHandler);
+    private final LeftPanel leftPanel = new LeftPanel(actionsHandler);
+    private final TopPanel topPanel = new TopPanel(actionsHandler);
     private final InfoPanel infoPanel = new InfoPanel();
-
-    private final Task_Status status = tasStaDao.findByName("Новая").get(0);
-    private final AddTaskWindow taskWindow = new AddTaskWindow(taskDao, tasStaDao.findAll(), status, currentProject);
     
     public void init(Stage stage) {
         root.getChildren().clear();
@@ -60,8 +57,6 @@ public class UiManager {
         stage.setTitle("External-Memory");
         stage.setScene(scene);
         stage.show();
-
-        taskWindow.show();
     }
 
     private void setup() {
@@ -128,7 +123,7 @@ public class UiManager {
                     break;
                 case "Task":
                     setCurrentTab("Task");
-                    TaskView taskView = new TaskView(tasStaDao.findAll(), taskDao.findTaskByPoject(currentProject.getId()));
+                    TaskView taskView = new TaskView(tasStaDao.findAll(), taskDao.findTaskByPoject(currentProject.getId()), actionsHandler);
                     infoPanel.setContent(taskView.getRoot());
                     break;
                 case "Decision":
@@ -145,6 +140,12 @@ public class UiManager {
                     System.out.println("Error: Ошибка действия вкладки.");
                     break;
             }
+        }
+    
+        public void addTaskAction(String statusName) {
+            AddTaskWindow taskWindow = new AddTaskWindow(taskDao, tasStaDao.findAll(), tasStaDao.findByName(statusName).get(0), currentProject);
+            System.out.println("Открываю окно добавления задачи");
+            taskWindow.show();
         }
     }
 }

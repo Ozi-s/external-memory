@@ -19,6 +19,7 @@ import javafx.geometry.Pos;
 
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
+import org.ozis.ui.UiManager.ActionsHandler;
 
 public class TaskView {
 
@@ -32,11 +33,11 @@ public class TaskView {
     private final Map<String, VBox> taskContainers = new HashMap<>();
     private final Map<String, ScrollPane> taskScrolls = new HashMap<>();
 
-    public TaskView(List<Task_Status> taskStatusList, List<Task> taskList) { // нужны Все статусы задач; Все задачи конкретного проекта.
+    public TaskView(List<Task_Status> taskStatusList, List<Task> taskList, ActionsHandler actionsHandler) { // нужны Все статусы задач; Все задачи конкретного проекта.
         setup();
 
         // Создаём колонки статусов
-        createStatusColumns(taskStatusList);
+        createStatusColumns(taskStatusList, actionsHandler);
         addTasks(taskList);
 
         // Добавляем доску в основной контейнер
@@ -97,7 +98,7 @@ public class TaskView {
         // GridPane.setVgrow(log, Priority.ALWAYS);
     }
 
-    private void createStatusColumns(List<Task_Status> taskStatusList) {
+    private void createStatusColumns(List<Task_Status> taskStatusList, ActionsHandler actionsHandler) {
 
         Button allButton = new Button("All");
         Button dayButton = new Button("Day");
@@ -134,7 +135,7 @@ public class TaskView {
             Label statusLabel = new Label(statusName);
             VBox tasksContainer = createTaskContainer();
             ScrollPane tasksContainerArea = createTaskContainerArea(tasksContainer);
-            Button addTaskButton = createTaskBtn(statusName);
+            Button addTaskButton = createTaskBtn(statusName, actionsHandler);
 
             // Сохраняем VBox по имени статуса
             taskContainers.put(statusName, tasksContainer);
@@ -196,18 +197,13 @@ public class TaskView {
             container.getChildren().add(taskButton);
     }
     
-    private Button createTaskBtn(String statusName) {
+    private Button createTaskBtn(String statusName, ActionsHandler actionsHandler) {
 
         Button button = new Button("+ Add task");
 
         button.setOnAction(event -> {
-            System.out.println(
-                "Создаём задачу со статусом: "
-                + statusName
-            );
-
-            // Здесь позже будет открытие
-            // окна создания задачи.
+            System.out.println("Создаём задачу со статусом: " + statusName);
+            actionsHandler.addTaskAction(statusName);
         });
 
         return button;

@@ -99,9 +99,12 @@ public class AddTaskWindow {
 
         VBox.setMargin(statusLabel, new Insets(10, 0, 0, 0));
         VBox.setMargin(filesPaneLabel, new Insets(10, 0, 0, 0));
+        VBox.setMargin(filesPane, new Insets(0, 0, 5, 0));
     
-        Scene scene = new Scene(root, 600, 300);
+        Scene scene = new Scene(root);
         stage.setTitle("Add Task");
+        stage.setWidth(520); stage.setMinWidth(500);
+        stage.setHeight(350); stage.setMinHeight(350);
         stage.setScene(scene);
     }
 

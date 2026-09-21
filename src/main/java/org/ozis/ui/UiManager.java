@@ -28,6 +28,7 @@ import org.ozis.ui.panel.*;
 
 import org.ozis.ui.tab.*;
 import org.ozis.ui.window.AddTaskWindow;
+import org.ozis.ui.window.TaskViewWindow;
 
 public class UiManager {
 
@@ -104,6 +105,10 @@ public class UiManager {
             root.add(leftPanel.getRoot(), 0, 0);
             root.add(topPanel.getRoot(), 1, 0);
             root.add(infoPanel.getRoot(), 1, 1);
+
+            // ===================================================================
+            
+            // ===================================================================
         }
 
         public void tabAction(String tabName) {
@@ -146,6 +151,11 @@ public class UiManager {
             AddTaskWindow taskWindow = new AddTaskWindow(taskDao, tasStaDao.findAll(), tasStaDao.findByName(statusName).get(0), currentProject);
             System.out.println("Открываю окно добавления задачи");
             taskWindow.show();
+        }
+        public void viewTaskAction(Task task) {
+            TaskViewWindow taskViewWindow = new TaskViewWindow(task);
+            System.out.println("Открываю окно просмотра задачи");
+            taskViewWindow.show();
         }
     }
 }

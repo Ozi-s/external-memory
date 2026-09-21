@@ -38,7 +38,7 @@ public class TaskView {
 
         // Создаём колонки статусов
         createStatusColumns(taskStatusList, actionsHandler);
-        addTasks(taskList);
+        addTasks(taskList, actionsHandler);
 
         // Добавляем доску в основной контейнер
         root.add(taskBoard, 0, 0);
@@ -176,14 +176,14 @@ public class TaskView {
     }
 
 
-    private void addTasks(List<Task> taskList) {
+    private void addTasks(List<Task> taskList, ActionsHandler actionsHandler) {
 
         for (Task task : taskList) {
-            addTask(task);
+            addTask(task, actionsHandler);
         }
     }
 
-    public void addTask(Task task) {
+    public void addTask(Task task, ActionsHandler actionsHandler) {
         // Получаем статус задачи
         Task_Status status = task.getTask_status();
         String statusName = status.getName();
@@ -194,7 +194,13 @@ public class TaskView {
         if (container == null) { return; }
 
         Button taskButton = new Button(task.getName());
-            container.getChildren().add(taskButton);
+        taskButton.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                // открытие окна просмотра задачи
+                actionsHandler.viewTaskAction(task);
+            }
+        });
+        container.getChildren().add(taskButton);
     }
     
     private Button createTaskBtn(String statusName, ActionsHandler actionsHandler) {

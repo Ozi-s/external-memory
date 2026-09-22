@@ -105,10 +105,6 @@ public class UiManager {
             root.add(leftPanel.getRoot(), 0, 0);
             root.add(topPanel.getRoot(), 1, 0);
             root.add(infoPanel.getRoot(), 1, 1);
-
-            // ===================================================================
-            
-            // ===================================================================
         }
 
         public void tabAction(String tabName) {
@@ -157,5 +153,7 @@ public class UiManager {
             System.out.println("Открываю окно просмотра задачи");
             taskViewWindow.show();
         }
+
+        public void viewContextHistoryAction() {}
     }
 }

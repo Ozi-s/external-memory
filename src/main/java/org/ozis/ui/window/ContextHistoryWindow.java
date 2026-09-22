@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -31,8 +32,7 @@ public class ContextHistoryWindow {
     private final List<Context> contexts;
     private final Set<Context> selectedContexts = new HashSet<>();
 
-    private final DateTimeFormatter dateFormatter =
-        DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public ContextHistoryWindow(List<Context> contexts) {
         this.contexts = contexts;
@@ -46,9 +46,7 @@ public class ContextHistoryWindow {
         contextsContainer.setFillWidth(true);
 
         for (Context context : contexts) {
-            contextsContainer.getChildren().add(
-                createContextCard(context)
-            );
+            contextsContainer.getChildren().add(createContextCard(context));
         }
 
         contextsScroll.setContent(contextsContainer);
@@ -57,37 +55,24 @@ public class ContextHistoryWindow {
         contextsScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         root.setCenter(contextsScroll);
+        BorderPane.setMargin(contextsScroll, new Insets(10));
 
-        BorderPane.setMargin(
-            contextsScroll,
-            new Insets(10)
-        );
+        HBox buttons = new HBox(10, deleteBtn, closeBtn);
+        buttons.setPadding(new Insets(10));
+        buttons.setAlignment(Pos.CENTER_RIGHT);
 
-        VBox bottom = new VBox(
-            new javafx.scene.layout.HBox(
-                10,
-                deleteBtn,
-                closeBtn
-            )
-        );
-
-        bottom.setPadding(new Insets(10));
-        bottom.setAlignment(Pos.CENTER_RIGHT);
-
-        root.setBottom(bottom);
+        root.setBottom(buttons);
 
         Scene scene = new Scene(root, 750, 650);
 
         stage.setTitle("Context History");
         stage.setScene(scene);
-
         stage.setMinWidth(600);
         stage.setMinHeight(450);
     }
 
     private VBox createContextCard(Context context) {
         VBox card = new VBox(10);
-
         card.setPadding(new Insets(15));
         card.setMaxWidth(Double.MAX_VALUE);
 
@@ -97,48 +82,24 @@ public class ContextHistoryWindow {
                 : "—"
         );
 
-        Label difficultyLabel = new Label(
-            "Difficulty: " + context.getDifficulty()
-        );
-
-        Label projectLabel = new Label(
-            "Project: #" + getProjectId(context)
-        );
+        Label difficultyLabel = new Label("Difficulty: " + context.getDifficulty());
+        Label projectLabel = new Label("Project: #" + getProjectId(context));
 
         dateLabel.setStyle("""
             -fx-font-size: 18px;
             -fx-font-weight: bold;
         """);
 
-        difficultyLabel.setStyle("""
-            -fx-font-size: 14px;
-        """);
-
-        projectLabel.setStyle("""
-            -fx-font-size: 14px;
-        """);
-
-        VBox summary = new VBox(
-            5,
-            dateLabel,
-            difficultyLabel,
-            projectLabel
-        );
-
+        VBox summary = new VBox(5, dateLabel, difficultyLabel, projectLabel);
         VBox details = createDetails(context);
 
         details.setVisible(false);
         details.setManaged(false);
 
-        card.getChildren().addAll(
-            summary,
-            details
-        );
-
+        card.getChildren().addAll(summary, details);
         updateCardStyle(card, false);
 
         card.setOnMouseClicked(event -> {
-
             if (event.getClickCount() == 2) {
                 details.setVisible(!details.isVisible());
                 details.setManaged(!details.isManaged());
@@ -156,31 +117,11 @@ public class ContextHistoryWindow {
     private VBox createDetails(Context context) {
         VBox details = new VBox(10);
 
-        VBox toDoBlock = createTextBlock(
-            "To Do",
-            context.getTo_do()
-        );
-
-        VBox inProgressBlock = createTextBlock(
-            "In Progress",
-            context.getIn_progress()
-        );
-
-        VBox doneBlock = createTextBlock(
-            "Done",
-            context.getDone()
-        );
-
-        VBox thinkBlock = createTextBlock(
-            "Think",
-            context.getThink()
-        );
-
         details.getChildren().addAll(
-            toDoBlock,
-            inProgressBlock,
-            doneBlock,
-            thinkBlock
+            createTextBlock("To Do", context.getTo_do()),
+            createTextBlock("In Progress", context.getIn_progress()),
+            createTextBlock("Done", context.getDone()),
+            createTextBlock("Think", context.getThink())
         );
 
         return details;
@@ -188,29 +129,21 @@ public class ContextHistoryWindow {
 
     private VBox createTextBlock(String title, String text) {
         Label titleLabel = new Label(title);
-
         titleLabel.setStyle("""
             -fx-font-size: 15px;
             -fx-font-weight: bold;
         """);
 
         Label textLabel = new Label(
-            text == null || text.isBlank()
-                ? "—"
-                : text
+            text == null || text.isBlank() ? "—" : text
         );
 
         textLabel.setWrapText(true);
 
-        return new VBox(
-            5,
-            titleLabel,
-            textLabel
-        );
+        return new VBox(5, titleLabel, textLabel);
     }
 
     private void toggleSelection(Context context, VBox card) {
-
         if (selectedContexts.contains(context)) {
             selectedContexts.remove(context);
             updateCardStyle(card, false);
@@ -221,7 +154,6 @@ public class ContextHistoryWindow {
     }
 
     private void updateCardStyle(VBox card, boolean selected) {
-
         if (selected) {
             card.setStyle("""
                 -fx-border-color: #7f49b4;
@@ -240,7 +172,6 @@ public class ContextHistoryWindow {
     }
 
     private int getProjectId(Context context) {
-
         if (context.getProject_id() == null) {
             return 0;
         }
@@ -249,15 +180,11 @@ public class ContextHistoryWindow {
     }
 
     private void setupActions() {
-
         deleteBtn.setOnAction(event -> {
-            // TODO:
-            // удалить selectedContexts
+            // TODO: удалить selectedContexts
         });
 
-        closeBtn.setOnAction(event -> {
-            stage.close();
-        });
+        closeBtn.setOnAction(event -> stage.close());
     }
 
     public void show() {

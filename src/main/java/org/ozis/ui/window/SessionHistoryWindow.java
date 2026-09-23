@@ -65,7 +65,7 @@
 
 //         Scene scene = new Scene(root, 700, 600);
 
-//         stage.setTitle("Session History");
+//         stage.setTitle("External-Memory - Session History");
 //         stage.setScene(scene);
 //         stage.setMinWidth(550);
 //         stage.setMinHeight(400);

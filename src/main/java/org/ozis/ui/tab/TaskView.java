@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -17,39 +18,66 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.geometry.Pos;
 
+import org.ozis.dao.TasStaDao;
+import org.ozis.dao.TaskDao;
+import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
 import org.ozis.ui.UiManager.ActionsHandler;
+import org.ozis.ui.window.AddTaskWindow;
+import org.ozis.ui.window.TaskViewWindow;
 
 public class TaskView {
-
+    
     private final ScrollPane rootScroll = new ScrollPane();
 
     private final GridPane root = new GridPane();
     private final GridPane taskBoard = new GridPane();
-    // private final область под логи. 
+    // private final TODO: "область под логи." 
 
     // Контейнеры задач для каждого статуса
     private final Map<String, VBox> taskContainers = new HashMap<>();
     private final Map<String, ScrollPane> taskScrolls = new HashMap<>();
 
-    public TaskView(List<Task_Status> taskStatusList, List<Task> taskList, ActionsHandler actionsHandler) { // нужны Все статусы задач; Все задачи конкретного проекта.
+    private final ActionsHandler actionsHandler;
+    private final List<Task_Status> taskStatusList;
+    private final TaskDao taskDao;
+    private final TasStaDao tasStaDao;
+    private List<Task> taskList;
+    
+    private List<Task> filterTask;
+    private String currentFilter;
+    private final Project currentProject;
+
+    private AddTaskWindow addTaskWindow;
+    
+    public TaskView(TasStaDao tasStaDao, TaskDao taskDao, Project currentProject, ActionsHandler actionsHandler) {
+        this.tasStaDao = tasStaDao;
+        this.taskStatusList = tasStaDao.findAll();
+        this.taskDao = taskDao;
+        this.taskList = taskDao.findTaskByPoject(currentProject.getId());
+        this.actionsHandler = actionsHandler;
+        this.currentProject = currentProject;
         setup();
-
+        
         // Создаём колонки статусов
-        createStatusColumns(taskStatusList, actionsHandler);
-        addTasks(taskList, actionsHandler);
-
+        createStatusColumns();
+        //addTasks(this.taskList);
+        setFilter("All");
+        
         // Добавляем доску в основной контейнер
         root.add(taskBoard, 0, 0);
-        // TODO:
-        // добавить область для логов
+        // TODO: добавить область для логов
 
         // Передаём root в ScrollPane
         rootScroll.setContent(root);
     }
 
+// ##############
+
     public ScrollPane getRoot() { return rootScroll; }
+
+// ##############
 
     private void setup() {
         rootScroll.setFitToWidth(true);
@@ -98,13 +126,21 @@ public class TaskView {
         // GridPane.setVgrow(log, Priority.ALWAYS);
     }
 
-    private void createStatusColumns(List<Task_Status> taskStatusList, ActionsHandler actionsHandler) {
+// ##############
 
+    // Создать столбики для доски
+    private void createStatusColumns() {
+    
         Button allButton = new Button("All");
         Button dayButton = new Button("Day");
         Button weekButton = new Button("Week");
         Button monthButton = new Button("Month");
 
+        allButton.setOnAction(event -> { setFilter("All"); });
+        dayButton.setOnAction(event -> { setFilter("Day"); });
+        weekButton.setOnAction(event -> { setFilter("Week"); });
+        monthButton.setOnAction(event -> { setFilter("Month"); });
+        
         VBox filterBox = new VBox(
             5,
             allButton,
@@ -135,7 +171,7 @@ public class TaskView {
             Label statusLabel = new Label(statusName);
             VBox tasksContainer = createTaskContainer();
             ScrollPane tasksContainerArea = createTaskContainerArea(tasksContainer);
-            Button addTaskButton = createTaskBtn(statusName, actionsHandler);
+            Button addTaskButton = createTaskBtn(statusName);
 
             // Сохраняем VBox по имени статуса
             taskContainers.put(statusName, tasksContainer);
@@ -158,12 +194,18 @@ public class TaskView {
         }
     }
 
+// ##############
+
+    // Создать контейнер для задач
     private VBox createTaskContainer() {
         VBox container = new VBox(5);
         
         return container;
     }
 
+// ##############
+
+    // Создать контейнер с задачами для доски.
     private ScrollPane createTaskContainerArea(VBox container) {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(container);
@@ -175,15 +217,70 @@ public class TaskView {
         return scrollPane;
     }
 
+// ##############
 
-    private void addTasks(List<Task> taskList, ActionsHandler actionsHandler) {
+    // Установить фильтр для отображаемых задач
+    private void setFilter(String filterName) {
+        if (filterName == null) { return; }
+        currentFilter = filterName;
 
-        for (Task task : taskList) {
-            addTask(task, actionsHandler);
+        taskList = taskDao.findTaskByPoject(currentProject.getId());
+        for (Task_Status status : taskStatusList) {
+            VBox ct = taskContainers.get(status.getName());
+            ct.getChildren().clear();
+        }
+        switch (filterName) {
+            case "All":
+                addTasks(taskList);
+                break;
+            case "Day":
+                filterTask = taskList.stream()
+                    .filter(task -> task.getExecution_period() <= 1)
+                    .toList();
+                
+                addTasks(filterTask);
+                break;
+                
+            case "Week":
+                filterTask = taskList.stream()
+                    .filter(task -> task.getExecution_period() <= 7 && task.getExecution_period() > 1)
+                    .toList();
+                
+                addTasks(filterTask);
+                break;
+                
+            case "Month":
+                filterTask = taskList.stream()
+                    .filter(task -> task.getExecution_period() <= 31 && task.getExecution_period() > 7)
+                    .toList();
+                
+                addTasks(filterTask);
+                break;
+
+            default:
+                System.out.println("ERROR: Ошибка установки фильтра, не правильное имя фильтра.");
+                addTasks(taskList);
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Ошибка установки фильтра, не правильное имя фильтра.");
+                alert.setTitle("External-Memory - Alert filter");
+                
+                alert.showAndWait();
+                break;
         }
     }
 
-    public void addTask(Task task, ActionsHandler actionsHandler) {
+// ##############
+
+    // Добавить задачИ в доску
+    private void addTasks(List<Task> taskList) {
+        for (Task task : taskList) {
+            addTask(task);
+        }
+    }
+
+// ##############
+
+    // Добавить задачу в доску
+    public void addTask(Task task) {
         // Получаем статус задачи
         Task_Status status = task.getTask_status();
         String statusName = status.getName();
@@ -197,28 +294,64 @@ public class TaskView {
         taskButton.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 // открытие окна просмотра задачи
-                actionsHandler.viewTaskAction(task);
+                viewTaskAction(task);
             }
         });
         container.getChildren().add(taskButton);
     }
-    
-    private Button createTaskBtn(String statusName, ActionsHandler actionsHandler) {
-
+// ##############
+    // Создать кнопку "Добавить задачу"
+    private Button createTaskBtn(String statusName) {
         Button button = new Button("+ Add task");
 
         button.setOnAction(event -> {
             System.out.println("Создаём задачу со статусом: " + statusName);
-            actionsHandler.addTaskAction(statusName);
+            addTaskAction(statusName);
         });
 
         return button;
     }
+// ##############
 
+// ##############
+    // получить контенер задач по статусу
     public VBox getStatusContainer(String statusName) {
         return taskContainers.get(statusName);
     }
+// ##############
+
+    // получить контейнер списка задач по статусу
     public ScrollPane getStatusContainerArea(String statusName) {
         return taskScrolls.get(statusName);
     }
+    
+// ##############
+
+    // открыть диалоговое окно для добавления новой задачи
+    public void addTaskAction(String statusName) {
+        if (addTaskWindow != null && addTaskWindow.isShowing()) {
+            System.out.println("Закрываю окно добавления задачи");
+            addTaskWindow.close();
+        }
+        addTaskWindow = new AddTaskWindow(
+            taskDao,
+            actionsHandler,
+            tasStaDao.findAll(), 
+            tasStaDao.findByName(statusName).get(0), 
+            currentProject
+        );
+        
+        System.out.println("Открываю окно добавления задачи");
+        addTaskWindow.show();
+    }
+
+// ##############
+        
+    public void viewTaskAction(Task task) {
+        TaskViewWindow taskViewWindow = new TaskViewWindow(task);
+        System.out.println("Открываю окно просмотра задачи");
+        taskViewWindow.show();
+    }
+    
+// ##############
 }

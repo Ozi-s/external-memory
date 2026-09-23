@@ -132,7 +132,7 @@ public class TaskViewWindow {
 
         Scene scene = new Scene(root, 700, 550);
 
-        stage.setTitle(task.getName());
+        stage.setTitle("External-Memory - TaskView: " + task.getName());
         stage.setScene(scene);
 
         stage.setMinWidth(600);

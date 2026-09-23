@@ -21,12 +21,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import org.ozis.entity.Task_Status;
+import org.ozis.ui.UiManager.ActionsHandler;
 import org.ozis.dao.TaskDao;
 import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 
 public class AddTaskWindow {
 
+    // private static AddTaskWindow instace;
+
+    private final ActionsHandler actionsHandler;
     private final Stage stage = new Stage();
     
     private final BorderPane root = new BorderPane();
@@ -54,9 +58,10 @@ public class AddTaskWindow {
 
     private final List<String> files = new ArrayList<>();
 
-    public AddTaskWindow(TaskDao taskDao, List<Task_Status> task_status_list, Task_Status selected_status, Project cProject) {
+    public AddTaskWindow(TaskDao taskDao, ActionsHandler actionsHandler, List<Task_Status> task_status_list, Task_Status selected_status, Project cProject) {
         setup();
         setupActions(taskDao, task_status_list, cProject);
+        this.actionsHandler = actionsHandler;
 
         for (Task_Status tStatus : task_status_list) {
             statusBox.getItems().add(tStatus.getName());
@@ -66,7 +71,7 @@ public class AddTaskWindow {
         root.setLeft(fieldsContainer);
         root.setRight(btnContainer);
     }
-
+    
     private void setup() {
         nameField.setPromptText("Task name:");
         descriptionArea.setPromptText("Description:");
@@ -102,7 +107,7 @@ public class AddTaskWindow {
         VBox.setMargin(filesPane, new Insets(0, 0, 5, 0));
     
         Scene scene = new Scene(root);
-        stage.setTitle("Add Task");
+        stage.setTitle("External-Memory - Add Task");
         stage.setWidth(520); stage.setMinWidth(500);
         stage.setHeight(350); stage.setMinHeight(350);
         stage.setScene(scene);
@@ -148,7 +153,8 @@ public class AddTaskWindow {
             );
             System.out.println("Save new Task: " + t.toString());
             taskDao.save(t);
-            
+            // actionsHandler.tabAction("Task");
+            // TODO: setFilter("All"); из класса TaskView
             stage.close();
         });
 
@@ -162,9 +168,11 @@ public class AddTaskWindow {
                 (LocalDate) deadlinePicker.getValue(),
                 cProject
             );
-            System.out.println("Save new Task: " + t.toString());
-            taskDao.save(t);
             
+            System.out.println("Save new Task: " + t.toString());
+            //actionsHandler.tabAction("Task");
+            // TODO: setFilter("All"); из класса TaskView
+            taskDao.save(t);
         });
     }
     
@@ -190,6 +198,14 @@ public class AddTaskWindow {
             } else {continue;}
         }
         return null;
+    }
+
+    public boolean isShowing() {
+        return stage.isShowing();
+    }
+
+    public void close() {
+        stage.close();
     }
     
     public void show() {

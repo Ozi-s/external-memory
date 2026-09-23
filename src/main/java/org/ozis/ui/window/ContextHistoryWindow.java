@@ -65,7 +65,7 @@ public class ContextHistoryWindow {
 
         Scene scene = new Scene(root, 750, 650);
 
-        stage.setTitle("Context History");
+        stage.setTitle("External-Memory - Context History");
         stage.setScene(scene);
         stage.setMinWidth(600);
         stage.setMinHeight(450);

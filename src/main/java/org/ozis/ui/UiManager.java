@@ -27,13 +27,13 @@ import org.ozis.entity.Project;
 import org.ozis.ui.panel.*;
 
 import org.ozis.ui.tab.*;
-import org.ozis.ui.window.AddTaskWindow;
-import org.ozis.ui.window.TaskViewWindow;
+import org.ozis.ui.window.ContextHistoryWindow;
 
 public class UiManager {
 
     public String currentTab;
     public Project currentProject;
+    
     private final ActionsHandler actionsHandler = new ActionsHandler();
 
     private final TaskDao taskDao = new TaskDao(Task.class);
@@ -119,12 +119,12 @@ public class UiManager {
                     break;
                 case "Context":
                     setCurrentTab("Context");
-                    ContextView contextView = new ContextView(contextDao.findLastContextByProject(currentProject.getName()).get(0));
+                    ContextView contextView = new ContextView(contextDao.findLastContextByProject(currentProject.getName()).get(0), actionsHandler);
                     infoPanel.setContent(contextView.getRoot());
                     break;
                 case "Task":
                     setCurrentTab("Task");
-                    TaskView taskView = new TaskView(tasStaDao.findAll(), taskDao.findTaskByPoject(currentProject.getId()), actionsHandler);
+                    TaskView taskView = new TaskView(tasStaDao, taskDao, currentProject, actionsHandler);
                     infoPanel.setContent(taskView.getRoot());
                     break;
                 case "Decision":
@@ -142,18 +142,11 @@ public class UiManager {
                     break;
             }
         }
-    
-        public void addTaskAction(String statusName) {
-            AddTaskWindow taskWindow = new AddTaskWindow(taskDao, tasStaDao.findAll(), tasStaDao.findByName(statusName).get(0), currentProject);
-            System.out.println("Открываю окно добавления задачи");
-            taskWindow.show();
-        }
-        public void viewTaskAction(Task task) {
-            TaskViewWindow taskViewWindow = new TaskViewWindow(task);
-            System.out.println("Открываю окно просмотра задачи");
-            taskViewWindow.show();
-        }
 
-        public void viewContextHistoryAction() {}
+        public void viewContextHistoryAction() {
+            ContextHistoryWindow contextHistoryWindow = new ContextHistoryWindow(contextDao.findContextByProject(currentProject.getName()));
+            System.out.println("Открываю историю Context-ов");
+            contextHistoryWindow.show();
+        }
     }
 }

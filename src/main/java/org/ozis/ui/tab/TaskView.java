@@ -23,7 +23,6 @@ import org.ozis.dao.TaskDao;
 import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
-import org.ozis.ui.UiManager.ActionsHandler;
 import org.ozis.ui.window.AddTaskWindow;
 import org.ozis.ui.window.TaskViewWindow;
 
@@ -39,7 +38,6 @@ public class TaskView {
     private final Map<String, VBox> taskContainers = new HashMap<>();
     private final Map<String, ScrollPane> taskScrolls = new HashMap<>();
 
-    private final ActionsHandler actionsHandler;
     private final List<Task_Status> taskStatusList;
     private final TaskDao taskDao;
     private final TasStaDao tasStaDao;
@@ -51,12 +49,11 @@ public class TaskView {
 
     private AddTaskWindow addTaskWindow;
     
-    public TaskView(TasStaDao tasStaDao, TaskDao taskDao, Project currentProject, ActionsHandler actionsHandler) {
+    public TaskView(TasStaDao tasStaDao, TaskDao taskDao, Project currentProject) {
         this.tasStaDao = tasStaDao;
         this.taskStatusList = tasStaDao.findAll();
         this.taskDao = taskDao;
         this.taskList = taskDao.findTaskByPoject(currentProject.getId());
-        this.actionsHandler = actionsHandler;
         this.currentProject = currentProject;
         setup();
         
@@ -335,7 +332,6 @@ public class TaskView {
         }
         addTaskWindow = new AddTaskWindow(
             taskDao,
-            actionsHandler,
             tasStaDao.findAll(), 
             tasStaDao.findByName(statusName).get(0), 
             currentProject,

@@ -9,11 +9,11 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Priority;
 
 import org.ozis.entity.Context;
-import org.ozis.ui.UiManager.ActionsHandler;
+import org.ozis.ui.ActionManager;
 
 public class ContextView {
 
-    private ActionsHandler actionsHandler;
+    private ActionManager actionManager;
 
     private final GridPane root = new GridPane();
     private final VBox btnContainer = new VBox();
@@ -25,9 +25,9 @@ public class ContextView {
     // private final Button startNewSessionBtn = new Button();
     // private final Button lastSessionsBtn = new Button();
 
-    public ContextView(Context context, ActionsHandler actionsHandler) {
+    public ContextView(Context context, ActionManager actionManager) {
         setup();
-        this.actionsHandler = actionsHandler;
+        this.actionManager = actionManager;
         
         btnContainer.getChildren().addAll(editBtn, addNewContextBtn, lastContextBtn);
         contextArea.setText(
@@ -77,7 +77,7 @@ public class ContextView {
         });
 
         lastContextBtn.setOnAction(event -> {
-            actionsHandler.viewContextHistoryAction();
+            actionManager.showContextHistory();
         });
     }
 }

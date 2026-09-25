@@ -7,17 +7,17 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
-import org.ozis.ui.UiManager.ActionsHandler;
+import org.ozis.ui.ActionManager;
 
 public class TopPanel {
 
-    private final ActionsHandler actionHandler;
+    private final ActionManager actionManager;
 
     private final HBox root = new HBox();
     private final Map<String, Button> tabButtons = new LinkedHashMap<>();
 
-    public TopPanel(ActionsHandler actionHandler) {
-        this.actionHandler = actionHandler;
+    public TopPanel(ActionManager actionManager) {
+        this.actionManager = actionManager;
 
         tabButtons.put("All",      new Button("All"));
         tabButtons.put("Context",  new Button("Context"));
@@ -38,7 +38,7 @@ public class TopPanel {
             btn.getStyleClass().add("tab-btn");
             btn.setOnAction(e -> {
                 System.out.println("Открываю вкладку " + tabName);
-                actionHandler.tabAction(tabName);
+                actionManager.switchTab(tabName);
             });
             root.getChildren().add(btn);
         });

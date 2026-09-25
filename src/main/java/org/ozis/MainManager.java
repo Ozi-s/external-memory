@@ -2,16 +2,18 @@ package org.ozis;
 
 import javafx.stage.Stage;
 import org.ozis.ui.UiManager;
+import org.ozis.ui.ActionManager;
 
 public class MainManager {
+    private UiManager uiManager;
+    private ActionManager actionManager;
 
-    UiManager uiManager = new UiManager();
-    
     public void start(Stage stage) {
-        // подготовка данных
-        // String[] projects = {"brain-dangeon","external-memory","minecraft-server"};
+        // Инициализация
+        uiManager = new UiManager();
+        actionManager = new ActionManager(uiManager);
         
-        // инициализация интерфейса
-        uiManager.init(stage);
+        // запуск
+        uiManager.init(stage, actionManager);
     }
 }

@@ -1,4 +1,4 @@
-package org.ozis.ui;
+package org.ozis.ui.util;
 
 import javafx.scene.Scene;
 

@@ -9,11 +9,11 @@ import javafx.geometry.Insets;
 
 import org.ozis.dao.ProjectDao;
 import org.ozis.entity.Project;
-import org.ozis.ui.UiManager.ActionsHandler;
+import org.ozis.ui.ActionManager;
 
 public class LeftPanel {
     private final ProjectDao projectDao = new ProjectDao(Project.class);
-    private ActionsHandler actionHandler;
+    private final ActionManager actionManager;
 
     private final BorderPane root = new BorderPane();
     private final VBox projectList = new VBox(10);
@@ -21,8 +21,8 @@ public class LeftPanel {
     private final Button projectAddButton = new Button("+");
 
     // получаем UiManager
-    public LeftPanel(ActionsHandler actionHandler) {
-        this.actionHandler = actionHandler;
+    public LeftPanel(ActionManager actionManager) {
+        this.actionManager = actionManager;
         setup();
         refreshProjects();
     }
@@ -61,7 +61,7 @@ public class LeftPanel {
         btn.getStyleClass().addAll("btn", "project-btn");
         btn.setOnAction(e -> {
             System.out.println("Открываю проект: " + name);
-            actionHandler.projectAction(name);
+            actionManager.openProject(name);
         });
         projectList.getChildren().add(btn);
     }

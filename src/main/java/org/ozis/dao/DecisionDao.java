@@ -22,7 +22,7 @@ public class DecisionDao extends GenericRepository<Decision,Integer>{
     public List<Decision> findDecisionByTask(Integer task_id){
         try(EntityManager em=HibernateUtil.createEntityManager()){
             return em.createQuery("""
-                    select d from Decision d where d.dependent_task,id=:task_id""", Decision.class).setParameter("task_id",task_id).getResultList();
+                    select d from Decision d where d.dependent_task.id=:task_id""", Decision.class).setParameter("task_id",task_id).getResultList();
         }
     }
 

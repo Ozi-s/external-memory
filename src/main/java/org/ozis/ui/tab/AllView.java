@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.ColumnConstraints;
 
+import org.ozis.entity.Context;
 import org.ozis.entity.Task;
 
 public class AllView {
@@ -21,26 +22,26 @@ public class AllView {
     private final GridPane root = new GridPane(); // главный контейнер
     private final VBox taskList = new VBox(5); // блок с прошлыми задачами
     private final VBox sessionList = new VBox(5); // блок с прошедшими сессиями
-    private final TextArea context = new TextArea(); // блок с контекстом проекта
+    private final TextArea contextArea = new TextArea(); // блок с контекстом проекта
     
     // private final ScrollPane activiti_log_s = new ScrollPane();
     // private final BorderPane activiti_root = new BorderPane();
     // private final хз нужно сделать активность как в гитхабе (future...) 
 
-    public AllView(List<Task> tasks) { // нужно получить информацию об: Tasks (List<Task> tasks); Sessions(List<Session> sessions); Context(Context last_context);
+    public AllView(List<Task> tasks, Context context) { // нужно получить информацию об: Tasks (List<Task> tasks); Sessions(List<Session> sessions); Context(Context last_context);
         setup();
 
         for (Task tsk : tasks) { taskList.getChildren().add(new Label(tsk.getName())); }
         for (int i = 0; i < 15; i++) { sessionList.getChildren().add(new Label("Session # " + i + " on " + i + ".09.2026;")); }
-        
+        //contextArea.set();
         
         taskListScroll.setContent(taskList);
         sessionListScroll.setContent(sessionList);
         
         root.add(taskListScroll, 0, 0);
         root.add(sessionListScroll, 1, 0);
-        root.add(context, 0, 1);
-        GridPane.setColumnSpan(context, 2);
+        root.add(contextArea, 0, 1);
+        GridPane.setColumnSpan(contextArea, 2);
     }
 
     public GridPane getRoot() { return root; }

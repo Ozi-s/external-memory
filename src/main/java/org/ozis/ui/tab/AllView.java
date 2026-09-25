@@ -30,8 +30,8 @@ public class AllView {
     public AllView(List<Task> tasks) { // нужно получить информацию об: Tasks (List<Task> tasks); Sessions(List<Session> sessions); Context(Context last_context);
         setup();
 
-        for (Task tsk : tasks) { taskList.getChildren().add(getNewLbl(tsk.getName())); }
-        for (int i = 0; i < 15; i++) { sessionList.getChildren().add(getNewLbl("Session # " + i + " on " + i + ".09.2026;")); }
+        for (Task tsk : tasks) { taskList.getChildren().add(new Label(tsk.getName())); }
+        for (int i = 0; i < 15; i++) { sessionList.getChildren().add(new Label("Session # " + i + " on " + i + ".09.2026;")); }
         
         
         taskListScroll.setContent(taskList);
@@ -77,11 +77,5 @@ public class AllView {
 
         // TODO:    
         // ебанное оформление цветами и прочей хунёй
-    }
-
-    private Label getNewLbl(String name) {
-        Label lbl = new Label(name);
-        // lbl.setStyle("""...""");
-        return lbl;
     }
 }

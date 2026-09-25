@@ -1,19 +1,20 @@
 package org.ozis.ui;
 
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.geometry.Insets;
-import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.Priority;
+import javafx.scene.control.Label;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 
 import org.ozis.dao.TaskDao;
 import org.ozis.entity.Task;
@@ -46,6 +47,8 @@ public class UiManager {
     private final LeftPanel leftPanel = new LeftPanel(actionsHandler);
     private final TopPanel topPanel = new TopPanel(actionsHandler);
     private final InfoPanel infoPanel = new InfoPanel();
+
+    private final Map<String, Node> viewCache = new HashMap<>();
     
     public void init(Stage stage) {
         root.getChildren().clear();
@@ -55,6 +58,7 @@ public class UiManager {
         GridPane.setRowSpan(leftPanel.getRoot(), 2);
         
         Scene scene = new Scene(root);
+        Styles.apply(scene);
         stage.setTitle("External-Memory");
         stage.setScene(scene);
         stage.show();
@@ -80,73 +84,95 @@ public class UiManager {
         root.getRowConstraints().addAll(row1, row2);
         
     }
-
-    public void setCurrentTab(String tabName) {
-        currentTab = tabName;
-        topPanel.sethighlightTab(tabName);
-        System.out.println("Текущая вкладка изменена на: " + tabName);
-    }
-
     
     public class ActionsHandler {
 
+        // Евент открытия проекта
         public void projectAction(String projectName) {
             if (projectName == null) { return; }
             root.getChildren().clear();
-            List<Project> projects = projectDao.findByName(projectName);
-            Project selectedProject = projects.get(0);
-            currentProject = selectedProject;
-            AllView allView = new AllView(taskDao.findTaskByPoject(selectedProject.getId()));
-            setCurrentTab("All");
-
-            infoPanel.setContent(allView.getRoot());
             
+            List<Project> projects = projectDao.findByName(projectName);
+            if (projects.isEmpty()) return;
+            
+            currentProject = projects.get(0);
+            viewCache.clear();
+            
+            AllView allView = new AllView(taskDao.findTaskByPoject(currentProject.getId()));
+            setCurrentTab("All");
+            infoPanel.setContent(allView.getRoot());
+
             GridPane.setHalignment(topPanel.getRoot(), HPos.CENTER);
             root.add(leftPanel.getRoot(), 0, 0);
             root.add(topPanel.getRoot(), 1, 0);
             root.add(infoPanel.getRoot(), 1, 1);
         }
 
-        public void tabAction(String tabName) {
-            if (tabName == null) { return; }
-            infoPanel.getRoot().getChildren().clear();
 
-            switch (tabName) {
-                case "All":
-                    setCurrentTab("All");
-                    AllView allView = new AllView(taskDao.findTaskByPoject(currentProject.getId()));
-                    infoPanel.setContent(allView.getRoot());
-                    break;
-                case "Context":
-                    setCurrentTab("Context");
-                    ContextView contextView = new ContextView(contextDao.findLastContextByProject(currentProject.getName()).get(0), actionsHandler);
-                    infoPanel.setContent(contextView.getRoot());
-                    break;
-                case "Task":
-                    setCurrentTab("Task");
-                    TaskView taskView = new TaskView(tasStaDao, taskDao, currentProject, actionsHandler);
-                    infoPanel.setContent(taskView.getRoot());
-                    break;
-                case "Decision":
-                    setCurrentTab("Decision");
-                    Map<String, List<String>> map = new HashMap<>();
-                    List<String> list = List.of("decision_123.md", "decision_321.md", "decision_213.md", "decision_231.md");
-                    map.put("Ui", list);
-                    map.put("Core", list);
-                    map.put("Architecture", list);
-                    DecisionView decisionView = new DecisionView(map);
-                    infoPanel.setContent(decisionView.getRoot());
-                    break;
-                default:
-                    System.out.println("Error: Ошибка действия вкладки.");
-                    break;
-            }
-        }
-
+        // Кнопка "просмотреть прошлые контексты"
         public void viewContextHistoryAction() {
             ContextHistoryWindow contextHistoryWindow = new ContextHistoryWindow(contextDao.findContextByProject(currentProject.getName()));
             System.out.println("Открываю историю Context-ов");
             contextHistoryWindow.show();
+        }
+
+        
+        // Евент смены вкладки
+        public void tabAction(String tabName) {
+            if (tabName == null || currentProject == null) { return; }
+            infoPanel.getRoot().getChildren().clear();
+            setCurrentTab(tabName);
+            infoPanel.setContent(getOrCreateView(tabName));
+        }
+
+        private Node getOrCreateView(String tabName) {
+            return viewCache.computeIfAbsent(tabName, this::createView);
+        }
+
+        private Node createView(String tabName) {
+            switch (tabName) {
+                case "All":
+                    AllView allView = new AllView(taskDao.findTaskByPoject(currentProject.getId()));
+                    return allView.getRoot();
+
+                case "Context":
+                    List<Context> contexts = contextDao.findLastContextByProject(currentProject.getName());
+                    if (contexts.isEmpty()) {
+                        return new Label("Контекст не найден для проекта " + currentProject.getName());
+                    }
+                    ContextView contextView = new ContextView(contexts.get(0), actionsHandler);
+                    return contextView.getRoot();
+
+                case "Task":
+                    TaskView taskView = new TaskView(tasStaDao, taskDao, currentProject, actionsHandler);
+                    return taskView.getRoot();
+
+                case "Decision":
+                    DecisionView decisionView = new DecisionView(getDecisionMap());
+                    return decisionView.getRoot();
+
+                default:
+                    System.err.println("Unknown tab: " + tabName);
+                    return new Label("Unknown tab: " + tabName);
+            }
+        }
+
+        public void setCurrentTab(String tabName) {
+            currentTab = tabName;
+            topPanel.sethighlightTab(tabName);
+            System.out.println("Текущая вкладка изменена на: " + tabName);
+        }
+
+
+
+        // TODO: удалить НАХУЙ
+        private Map<String, List<String>> getDecisionMap() {
+            Map<String, List<String>> map = new HashMap<>();
+            List<String> list = List.of("decision_123.md", "decision_321.md", "decision_213.md", "decision_231.md");
+            map.put("Ui", list);
+            map.put("Core", list);
+            map.put("Architecture", list);
+            return map;
         }
     }
 }

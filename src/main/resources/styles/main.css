@@ -1,0 +1,202 @@
+/* ============================================================
+   External-Memory — main stylesheet
+   ============================================================ */
+
+/* ----- Палитра и базовые переменные ----- */
+.root {
+    -em-bg-primary:   #141414;
+    -em-bg-secondary: #0d0d0d;
+    -em-bg-surface:   #1c1c1c;
+
+    -em-accent:         #7f49b4;
+    -em-accent-hover:   #9a68ca;
+    -em-accent-pressed: #68399a;
+
+    -em-text:        #cfcfcf;
+    -em-text-muted:  #888888;
+    -em-text-active: #ffffff;
+
+    -em-border:      #333333;
+
+    -fx-background-color: -em-bg-secondary;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* ----- Панели ----- */
+.panel {
+    -fx-background-color: -em-bg-primary;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+.panel-title {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* ----- Кнопки ----- */
+.btn {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 20px;
+    -fx-background-radius: 8px;
+    -fx-padding: 5 12 5 12;
+    -fx-cursor: hand;
+}
+.btn:hover   { -fx-background-color: -em-accent-hover; }
+.btn:pressed { -fx-background-color: -em-accent-pressed; }
+.btn:disabled { -fx-opacity: 0.5; }
+
+/* Кнопки-табы */
+.tab-btn {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 20px;
+    -fx-background-radius: 8px;
+}
+.tab-btn:hover { -fx-background-color: -em-accent-hover; }
+.tab-btn.active {
+    -fx-background-color: -em-accent-hover;
+    -fx-text-fill: -em-text-active;
+}
+
+/* Кнопки проектов в LeftPanel */
+.project-btn {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 20px;
+    -fx-background-radius: 8px;
+    -fx-max-width: infinity;
+}
+.project-btn:hover   { -fx-background-color: -em-accent-hover; }
+.project-btn:pressed { -fx-background-color: -em-accent-pressed; }
+
+/* Кнопка "+" */
+.btn-add {
+    -fx-font-size: 22px;
+    -fx-max-width: infinity;
+}
+
+/* ----- Поля ввода ----- */
+.text-field,
+.text-area,
+.combo-box,
+.date-picker,
+.spinner {
+    -fx-background-color: -em-bg-surface;
+    -fx-text-fill: -em-text;
+    -fx-prompt-text-fill: -em-text-muted;
+    -fx-background-radius: 6px;
+    -fx-border-color: -em-border;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+}
+.text-area .content {
+    -fx-background-color: -em-bg-surface;
+}
+.text-area {
+    -fx-text-fill: -em-text;
+}
+
+/* ----- ScrollPane ----- */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+.scroll-bar .thumb {
+    -fx-background-color: -em-border;
+    -fx-background-radius: 6px;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: -em-accent;
+}
+
+/* ----- Заголовки и метки ----- */
+.label {
+    -fx-text-fill: -em-text;
+}
+.label-muted {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 13px;
+}
+.label-section {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ----- Карточки (ContextHistory, TaskView) ----- */
+.card {
+    -fx-background-color: -em-bg-surface;
+    -fx-background-radius: 8px;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-padding: 15;
+}
+.card:hover {
+    -fx-border-color: -em-accent;
+}
+.card.selected {
+    -fx-border-color: -em-accent;
+    -fx-border-width: 2px;
+}
+
+/* ----- Чипы (файлы в TaskView) ----- */
+.chip {
+    -fx-background-color: -em-bg-surface;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 10 6 10;
+    -fx-text-fill: -em-text;
+}
+
+/* ----- Доска задач (TaskView) ----- */
+.task-board {
+    -fx-grid-lines-visible: false;
+}
+.task-column-header {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.task-card {
+    -fx-background-color: -em-bg-surface;
+    -fx-background-radius: 6px;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 8 10 8 10;
+    -fx-text-fill: -em-text;
+    -fx-max-width: infinity;
+    -fx-alignment: center-left;
+}
+.task-card:hover {
+    -fx-border-color: -em-accent;
+}
+
+/* ----- TreeView (DecisionView) ----- */
+.tree-view {
+    -fx-background-color: -em-bg-primary;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+}
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -em-text;
+}
+.tree-cell:selected {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text-active;
+}

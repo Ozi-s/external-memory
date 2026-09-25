@@ -22,6 +22,7 @@ import javafx.geometry.Pos;
 
 import org.ozis.entity.Task_Status;
 import org.ozis.ui.UiManager.ActionsHandler;
+import org.ozis.ui.tab.TaskView;
 import org.ozis.dao.TaskDao;
 import org.ozis.entity.Project;
 import org.ozis.entity.Task;
@@ -30,6 +31,7 @@ public class AddTaskWindow {
 
     // private static AddTaskWindow instace;
 
+    private final TaskView taskView;
     private final ActionsHandler actionsHandler;
     private final Stage stage = new Stage();
     
@@ -58,10 +60,11 @@ public class AddTaskWindow {
 
     private final List<String> files = new ArrayList<>();
 
-    public AddTaskWindow(TaskDao taskDao, ActionsHandler actionsHandler, List<Task_Status> task_status_list, Task_Status selected_status, Project cProject) {
+    public AddTaskWindow(TaskDao taskDao, ActionsHandler actionsHandler, List<Task_Status> task_status_list, Task_Status selected_status, Project cProject, TaskView taskView) {
         setup();
         setupActions(taskDao, task_status_list, cProject);
         this.actionsHandler = actionsHandler;
+        this.taskView = taskView;
 
         for (Task_Status tStatus : task_status_list) {
             statusBox.getItems().add(tStatus.getName());
@@ -153,6 +156,7 @@ public class AddTaskWindow {
             );
             System.out.println("Save new Task: " + t.toString());
             taskDao.save(t);
+            taskView.setFilter("All");
             // actionsHandler.tabAction("Task");
             // TODO: setFilter("All"); из класса TaskView
             stage.close();

@@ -220,7 +220,7 @@ public class TaskView {
 // ##############
 
     // Установить фильтр для отображаемых задач
-    private void setFilter(String filterName) {
+    public void setFilter(String filterName) {
         if (filterName == null) { return; }
         currentFilter = filterName;
 
@@ -338,7 +338,8 @@ public class TaskView {
             actionsHandler,
             tasStaDao.findAll(), 
             tasStaDao.findByName(statusName).get(0), 
-            currentProject
+            currentProject,
+            this
         );
         
         System.out.println("Открываю окно добавления задачи");

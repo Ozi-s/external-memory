@@ -21,7 +21,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import org.ozis.entity.Task_Status;
-import org.ozis.ui.ActionManager;
 import org.ozis.ui.tab.TaskView;
 import org.ozis.dao.TaskDao;
 import org.ozis.entity.Project;
@@ -60,9 +59,9 @@ public class AddTaskWindow {
     private final List<String> files = new ArrayList<>();
 
     public AddTaskWindow(TaskDao taskDao, List<Task_Status> task_status_list, Task_Status selected_status, Project cProject, TaskView taskView) {
+        this.taskView = taskView;
         setup();
         setupActions(taskDao, task_status_list, cProject);
-        this.taskView = taskView;
 
         for (Task_Status tStatus : task_status_list) {
             statusBox.getItems().add(tStatus.getName());

@@ -185,6 +185,86 @@
     -fx-border-color: -em-accent;
 }
 
+.task-card.selected {
+    -fx-border-color: -em-accent;
+    -fx-border-width: 2px;
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text-active;
+}
+
+.selection-bar {
+    -fx-background-color: -em-bg-primary;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 12 8 12;
+}
+
+.selection-label {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* TaskViewWindow */
+.window-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -em-text;
+}
+
+.status-badge {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text-active;
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 8px;
+    -fx-font-size: 16px;
+}
+
+.section-heading {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -em-text;
+}
+
+.meta-title {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 13px;
+}
+
+.meta-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -em-text;
+}
+
+.readonly-area {
+    -fx-background-color: -em-bg-surface;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 18px;
+    -fx-opacity: 1;
+}
+.readonly-area:focused {
+    -fx-border-color: -em-border;
+}
+.readonly-area .content {
+    -fx-background-color: -em-bg-surface;
+}
+
+.btn-danger {
+    -fx-background-color: #8a3a3a;
+    -fx-text-fill: -em-text-active;
+    -fx-font-size: 20px;
+    -fx-background-radius: 8px;
+    -fx-padding: 5 12 5 12;
+    -fx-cursor: hand;
+}
+
+.btn-danger:hover   { -fx-background-color: #a04444; }
+.btn-danger:pressed { -fx-background-color: #6e2e2e; }
+
 /* ----- TreeView (DecisionView) ----- */
 .tree-view {
     -fx-background-color: -em-bg-primary;
@@ -199,4 +279,57 @@
 .tree-cell:selected {
     -fx-background-color: -em-accent;
     -fx-text-fill: -em-text-active;
+}
+
+/* ----- AllView ----- */
+.all-view {
+    -fx-background-color: transparent;
+}
+
+.section-title {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.section-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.context-block-title {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.context-block-text {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 14px;
+}
+
+/* ----- Dialogs ----- */
+
+.em-dialog {
+    -fx-background-color: -em-bg-primary;
+}
+.em-dialog .header-panel {
+    -fx-background-color: -em-bg-secondary;
+}
+.em-dialog .header-panel .label {
+    -fx-text-fill: -em-text;
+}
+.em-dialog .content.label {
+    -fx-text-fill: -em-text;
+}
+.em-dialog .button {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text;
+    -fx-background-radius: 6px;
+}
+.em-dialog .button:hover {
+    -fx-background-color: -em-accent-hover;
 }

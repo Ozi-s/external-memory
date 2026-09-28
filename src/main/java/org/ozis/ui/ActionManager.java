@@ -19,7 +19,9 @@ import org.ozis.ui.tab.AllView;
 import org.ozis.ui.tab.ContextView;
 import org.ozis.ui.tab.DecisionView;
 import org.ozis.ui.tab.TaskView;
+import org.ozis.ui.util.Notifier;
 import org.ozis.ui.window.ContextHistoryWindow;
+import org.ozis.ui.window.TaskViewWindow;
 
 public class ActionManager {
 
@@ -32,6 +34,7 @@ public class ActionManager {
 
     private Project currentProject;
     private String currentTab;
+    private Context lastContext;
 
     public ActionManager(UiManager uiManager) {
         this.uiManager = uiManager;
@@ -46,8 +49,9 @@ public class ActionManager {
         if (projects.isEmpty()) return;
 
         currentProject = projects.get(0);
-        uiManager.invalidateCache();
+        refreshLastContext();
 
+        uiManager.invalidateCache();
         uiManager.showProjectLayout();
         switchTab("All");
     }
@@ -57,6 +61,22 @@ public class ActionManager {
 
         currentTab = tabName;
         uiManager.showView(tabName, () -> createView(tabName));
+    }
+
+    public void openTask(Task task) {
+        if (task == null) { return; }
+        TaskViewWindow window = new TaskViewWindow(task, this);
+        window.show();
+    }
+    
+    public void deleteTasks(List<Task> tasks) {
+        if (tasks == null || tasks.isEmpty()) { return; }
+        
+        // TODO: когда появится soft delete в БД:
+        // for (Task t: tasks) {taskDao.softDelete(task); }
+        // uiManager.invalidateView("Task");
+        // uiManager.invalidateView("All");
+        // switchTab("Task");
     }
 
     public void showContextHistory() {
@@ -73,19 +93,18 @@ public class ActionManager {
     private Node createView(String tabName) {
         switch (tabName) {
             case "All":
-                AllView allView = new AllView(taskDao.findTaskByPoject(currentProject.getId()), contextDao.findLastContextByProject(currentProject.getName()).get(0));
+                AllView allView = new AllView(currentProject, taskDao.findTaskByPoject(currentProject.getId()), lastContext, this);
                 return allView.getRoot();
 
             case "Context":
-                List<Context> contexts = contextDao.findLastContextByProject(currentProject.getName());
-                if (contexts.isEmpty()) {
+                if (lastContext == null) {
                     return new Label("Контекст не найден для проекта " + currentProject.getName());
                 }
-                ContextView contextView = new ContextView(contexts.get(0), this);
+                ContextView contextView = new ContextView(lastContext, this);
                 return contextView.getRoot();
 
             case "Task":
-                TaskView taskView = new TaskView(tasStaDao, taskDao, currentProject);
+                TaskView taskView = new TaskView(tasStaDao, taskDao, currentProject, this);
                 return taskView.getRoot();
 
             case "Decision":
@@ -98,6 +117,9 @@ public class ActionManager {
         }
     }
 
+
+    // ==== Утилиты ====
+    
     private Map<String, List<String>> dummyDecisionTree() {
         List<String> list = List.of("decision_123.md", "decision_321.md", "decision_213.md", "decision_231.md");
         Map<String, List<String>> map = new HashMap<>();
@@ -105,5 +127,24 @@ public class ActionManager {
         map.put("Core", list);
         map.put("Architecture", list);
         return map;
+    }
+
+    private void refreshLastContext() {
+        List<Context> contexts = contextDao.findLastContextByProject(currentProject.getName());
+        lastContext = contexts.isEmpty() ? null : contexts.get(0);
+    }
+
+    public boolean confirmAndDelete(List<Task> tasks) {
+        if (tasks == null || tasks.isEmpty()) return false;
+
+        String header = tasks.size() == 1
+            ? "Delete \"" + tasks.get(0).getName() + "\"?"
+            : "Delete " + tasks.size() + " tasks?";
+            
+        boolean confirmed = Notifier.confirm("Delete tasks", header, "This action cannot be undone.");
+        if (!confirmed) return false;
+
+        deleteTasks(tasks);
+        return true;
     }
 }

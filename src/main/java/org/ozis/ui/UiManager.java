@@ -79,6 +79,10 @@ public class UiManager {
     public void invalidateCache() {
         viewCache.clear();
     }
+    
+    public void invalidateView(String tabName) {
+        viewCache.remove(tabName);
+    }
 
     // ==== Внутреннее ====
 

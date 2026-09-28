@@ -1,6 +1,7 @@
 package org.ozis.ui.window;
 
-import javafx.geometry.Insets;
+import java.util.List;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,10 +11,14 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
 
 import org.ozis.entity.Task;
+import org.ozis.ui.ActionManager;
+import org.ozis.ui.util.Styles;
 
 public class TaskViewWindow {
 
@@ -31,12 +36,15 @@ public class TaskViewWindow {
     private final FlowPane filesPane = new FlowPane(5, 5);
 
     private final Button editBtn = new Button("Edit");
+    private final Button deleteBtn = new Button("Delete");
     private final Button closeBtn = new Button("Close");
 
     private final Task task;
+    private final ActionManager actionManager;
 
-    public TaskViewWindow(Task task) {
+    public TaskViewWindow(Task task, ActionManager actionManager) {
         this.task = task;
+        this.actionManager = actionManager;
 
         setup();
         setupActions();
@@ -44,26 +52,18 @@ public class TaskViewWindow {
 
     private void setup() {
 
-        // Header
+        // ==== Header ====
 
         nameLabel.setText(task.getName());
-        nameLabel.setStyle("""
-            -fx-font-size: 24px;
-            -fx-font-weight: bold;
-        """);
+        nameLabel.getStyleClass().add("window-title");
 
         statusLabel.setText(task.getTask_status().getName());
-        statusLabel.setStyle("""
-            -fx-background-color: #7f49b4;
-            -fx-text-fill: #ffffff;
-            -fx-padding: 6 12 6 12;
-            -fx-background-radius: 8px;
-            -fx-font-size: 16px;
-        """);
+        statusLabel.getStyleClass().add("status-badge");
 
         HBox header = new HBox(15, nameLabel, statusLabel);
+        header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        // Metadata
+        // ==== Metadata ====
 
         executionPeriodLabel.setText(task.getExecution_period() + " days");
 
@@ -83,57 +83,65 @@ public class TaskViewWindow {
         metadata.add(createMetaBlock("Deadline", deadlineLabel), 1, 0);
         metadata.add(createMetaBlock("Project", projectIdLabel), 2, 0);
 
-        // Description
+        // ==== Description ====
 
         Label descriptionTitle = new Label("Description");
-        descriptionTitle.setStyle("""
-            -fx-font-size: 16px;
-            -fx-font-weight: bold;
-        """);
+        descriptionTitle.getStyleClass().add("section-heading");
 
         descriptionArea.setText(task.getDescription());
         descriptionArea.setWrapText(true);
         descriptionArea.setEditable(false);
-        descriptionArea.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        descriptionArea.setMaxWidth(Double.MAX_VALUE);
+        descriptionArea.setPrefHeight(160);
+        descriptionArea.setMinHeight(120);
+        descriptionArea.getStyleClass().add("readonly-area");
 
         VBox descriptionBlock = new VBox(5, descriptionTitle, descriptionArea);
-        VBox.setVgrow(descriptionArea, Priority.ALWAYS);
 
-        // Files
+        // ==== Files ====
 
         Label filesTitle = new Label("Files");
-        filesTitle.setStyle("""
-            -fx-font-size: 16px;
-            -fx-font-weight: bold;
-        """);
+        filesTitle.getStyleClass().add("section-heading");
 
         addFiles(task.getFiles());
 
         VBox filesBlock = new VBox(5, filesTitle, filesPane);
 
-        // Main content
+        // ==== Main content ====
 
         VBox content = new VBox(20, header, metadata, descriptionBlock, filesBlock);
         content.setPadding(new Insets(20));
 
-        VBox.setVgrow(descriptionBlock, Priority.ALWAYS);
+        VBox.setVgrow(filesBlock, Priority.ALWAYS);
 
-        // Buttons
+        // ==== Buttons ====
 
-        HBox buttons = new HBox(10, editBtn, closeBtn);
+        editBtn.getStyleClass().add("btn");
+        deleteBtn.getStyleClass().add("btn-danger");
+        closeBtn.getStyleClass().add("btn");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        HBox buttons = new HBox(10, deleteBtn, spacer, editBtn, closeBtn);
         buttons.setPadding(new Insets(15, 20, 20, 20));
 
-        // Root
+        // ==== Root ====
 
         root.setCenter(content);
         root.setBottom(buttons);
 
-        // Stage
+        // ==== Stage ====
 
-        Scene scene = new Scene(root, 700, 550);
+        Scene scene = new Scene(root, 720, 500);
+        Styles.apply(scene);
 
         stage.setTitle("External-Memory - TaskView: " + task.getName());
         stage.setScene(scene);
+
+        // NOTE: 
+        // stage.widthProperty().addListener((obs, old, nw) -> System.out.println("Width: " + nw));
+        // stage.heightProperty().addListener((obs, old, nh) -> System.out.println("Height: " + nh));
 
         stage.setMinWidth(600);
         stage.setMinHeight(450);
@@ -141,23 +149,18 @@ public class TaskViewWindow {
 
     private VBox createMetaBlock(String title, Label value) {
         Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("meta-title");
 
-        titleLabel.setStyle("""
-            -fx-text-fill: #888888;
-            -fx-font-size: 13px;
-        """);
-
-        value.setStyle("""
-            -fx-font-size: 16px;
-            -fx-font-weight: bold;
-        """);
+        value.getStyleClass().add("meta-value");
 
         return new VBox(3, titleLabel, value);
     }
 
     private void addFiles(String files) {
         if (files == null || files.isBlank()) {
-            filesPane.getChildren().add(new Label("No files"));
+            Label empty = new Label("No files");
+            empty.getStyleClass().add("label-muted");
+            filesPane.getChildren().add(empty);
             return;
         }
 
@@ -172,19 +175,18 @@ public class TaskViewWindow {
 
     private Label createFileLabel(String fileName) {
         Label fileLabel = new Label(fileName);
-
-        fileLabel.setStyle("""
-            -fx-background-color: #cfcfcf;
-            -fx-padding: 6 10 6 10;
-            -fx-background-radius: 6px;
-        """);
-
+        fileLabel.getStyleClass().add("chip");
         return fileLabel;
     }
 
     private void setupActions() {
         editBtn.setOnAction(event -> {
             System.out.println("Редактирование задачи");
+        });
+
+        deleteBtn.setOnAction(event -> {
+            actionManager.confirmAndDelete(List.of(task));
+            // TODO: перекрасить окно в серый, изменить статус задачи, ПОКАЗАТЬ ЧТО МЫ ЕЁ УДАЛИЛИ
         });
 
         closeBtn.setOnAction(event -> {

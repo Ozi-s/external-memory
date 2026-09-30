@@ -20,6 +20,7 @@ public class Task {
         this.description = description;
         this.deadline = deadline;
         this.project_id = project_id;
+        this.deleted=false;
     }
 
     @Id
@@ -50,6 +51,17 @@ public class Task {
 
     @OneToMany(mappedBy = "dependentTask")
     private List<Decision> decisions;
+
+
+    @Column
+    private boolean deleted=false;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public int getId() {
         return id;

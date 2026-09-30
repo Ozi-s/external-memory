@@ -1,6 +1,7 @@
 package org.ozis.dao;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import org.ozis.dto.TaskDto;
 import org.ozis.entity.Task;
 import org.ozis.util.HibernateUtil;
@@ -19,7 +20,7 @@ public class TaskDao extends GenericRepository<Task, Integer>{
                     select t
                     from Task t
                     join fetch t.task_status
-                    where t.project_id.id=:project_id """).setParameter("project_id", project_id).getResultList();
+                    where t.project_id.id=:project_id and t.deleted=false """).setParameter("project_id", project_id).getResultList();
         }
     }
 
@@ -36,7 +37,7 @@ public class TaskDao extends GenericRepository<Task, Integer>{
     public List<Task> findTaskByStatus(String status){
         try(EntityManager em=HibernateUtil.createEntityManager()){
             return em.createQuery("""
-                    select t from Task where t.task_status.name like :status""", Task.class).setParameter("status", "%"+status+"%").getResultList();
+                    select t from Task where t.task_status.name and t.deleted=false like :status""", Task.class).setParameter("status", "%"+status+"%").getResultList();
         }
     }
 
@@ -45,7 +46,7 @@ public class TaskDao extends GenericRepository<Task, Integer>{
             return em.createQuery(
                             "SELECT t " +
                                     "FROM Task t JOIN t.task_status s " +
-                                    "WHERE t.project_id.name like :project AND s.name like :status", Task.class)
+                                    "WHERE t.project_id.name like :project AND s.name like :status and t.deleted=false", Task.class)
                     .setParameter("project", "%"+project+"%")
                     .setParameter("status","%"+ status+"%")
                     .getResultList();
@@ -71,6 +72,48 @@ public class TaskDao extends GenericRepository<Task, Integer>{
         }
     }
 
+    public boolean softDelete(int id) {
+        EntityManager em = HibernateUtil.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            int updated = em.createQuery("""
+                UPDATE Task t
+                SET t.deleted = true
+                WHERE t.id = :id
+                """).setParameter("id", id).executeUpdate();
+            tx.commit();
+            return updated > 0;
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 
+    public boolean restore(int id) {
+        EntityManager em = HibernateUtil.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            int updated = em.createQuery("""
+                UPDATE Task t
+                SET t.deleted = false
+                WHERE t.id = :id
+                """).setParameter("id", id).executeUpdate();
+            tx.commit();
+            return updated > 0;
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 
 }

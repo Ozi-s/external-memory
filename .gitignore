@@ -32,3 +32,6 @@ bin/
 **/secret.properties
 **/local.properties
 *.log
+
+ai_index.py
+index_ai.txt

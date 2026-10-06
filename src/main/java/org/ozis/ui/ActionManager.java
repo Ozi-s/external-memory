@@ -3,6 +3,8 @@ package org.ozis.ui;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.Optional;
+
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -11,10 +13,12 @@ import org.ozis.dao.ContextDao;
 import org.ozis.dao.ProjectDao;
 import org.ozis.dao.TasStaDao;
 import org.ozis.dao.TaskDao;
+import org.ozis.dao.WorkSessionDao;
 import org.ozis.entity.Context;
 import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
+import org.ozis.entity.WorkSession;
 import org.ozis.ui.tab.AllView;
 import org.ozis.ui.tab.ContextView;
 import org.ozis.ui.tab.DecisionView;
@@ -31,6 +35,7 @@ public class ActionManager {
     private final TasStaDao tasStaDao = new TasStaDao(Task_Status.class);
     private final ContextDao contextDao = new ContextDao(Context.class);
     private final ProjectDao projectDao = new ProjectDao(Project.class);
+    private final WorkSessionDao workSessionDao = new WorkSessionDao();
 
     private Project currentProject;
     private String currentTab;
@@ -68,7 +73,17 @@ public class ActionManager {
         TaskViewWindow window = new TaskViewWindow(task, this);
         window.show();
     }
-    
+
+    public void createTask(Task task) {
+        if (task == null) return;
+
+        taskDao.save(task);
+
+        uiManager.invalidateView("Task");
+        uiManager.invalidateView("All");
+        switchTab(currentTab);
+    }
+        
     public void deleteTasks(List<Task> tasks) {
         if (tasks == null || tasks.isEmpty()) { return; }
         
@@ -88,6 +103,32 @@ public class ActionManager {
         window.show();
     }
 
+    public List<WorkSession> getRecentSessions(int limit) {
+        if (currentProject == null) return List.of();
+        return workSessionDao.findSesionByProject(currentProject)
+            .stream()
+            .limit(limit)
+            .toList();
+    }
+
+    public Optional<WorkSession> getActiveSession() {
+        return workSessionDao.findActiveSession();
+    }
+    
+    public void startSession() {
+        if (currentProject == null) return;
+        workSessionDao.startSession(currentProject, null);
+        uiManager.invalidateView("Context");
+        switchTab("Context");
+    }
+
+    public void endSession(WorkSession session) {
+        if (session == null) return;
+        workSessionDao.finishSession(session.getId());
+        uiManager.invalidateView("Context");
+        switchTab("Context");
+    }
+
     // ==== Создание вьюх ====
 
     private Node createView(String tabName) {
@@ -100,7 +141,7 @@ public class ActionManager {
                 if (lastContext == null) {
                     return new Label("Контекст не найден для проекта " + currentProject.getName());
                 }
-                ContextView contextView = new ContextView(lastContext, this);
+                ContextView contextView = new ContextView(lastContext, currentProject, this);
                 return contextView.getRoot();
 
             case "Task":

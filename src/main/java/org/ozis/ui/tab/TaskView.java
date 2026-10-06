@@ -285,7 +285,7 @@ public class TaskView {
 
         taskButton.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
-                viewTaskAction(task);
+                actionManager.openTask(task);
                 event.consume();
                 return;
             }
@@ -369,17 +369,11 @@ public class TaskView {
             addTaskWindow.close();
         }
         addTaskWindow = new AddTaskWindow(
-            taskDao,
+            actionManager,
             tasStaDao.findAll(),
             tasStaDao.findByName(statusName).get(0),
-            currentProject,
-            this
+            currentProject
         );
         addTaskWindow.show();
-    }
-
-    public void viewTaskAction(Task task) {
-        TaskViewWindow taskViewWindow = new TaskViewWindow(task, actionManager);
-        taskViewWindow.show();
     }
 }

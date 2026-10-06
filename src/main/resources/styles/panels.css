@@ -1,0 +1,48 @@
+/* ============================================================
+   panels.css — LeftPanel, TopPanel, InfoPanel
+   ============================================================ */
+
+.panel {
+    -fx-background-color: -em-bg-primary;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
+.panel-title {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+/* ----- Кнопки-табы (TopPanel) ----- */
+
+.tab-btn {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 20px;
+    -fx-background-radius: 8px;
+}
+.tab-btn:hover { -fx-background-color: -em-accent-hover; }
+.tab-btn.active {
+    -fx-background-color: -em-accent-hover;
+    -fx-text-fill: -em-text-active;
+}
+
+/* ----- Кнопки проектов (LeftPanel) ----- */
+
+.project-btn {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 20px;
+    -fx-background-radius: 8px;
+    -fx-max-width: infinity;
+}
+.project-btn:hover   { -fx-background-color: -em-accent-hover; }
+.project-btn:pressed { -fx-background-color: -em-accent-pressed; }
+
+/* ----- Кнопка "+" (LeftPanel) ----- */
+
+.btn-add {
+    -fx-font-size: 22px;
+    -fx-max-width: infinity;
+}

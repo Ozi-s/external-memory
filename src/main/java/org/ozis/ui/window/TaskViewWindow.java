@@ -22,9 +22,14 @@ import org.ozis.ui.util.Styles;
 
 public class TaskViewWindow {
 
+    // ==== DATA ====
     private final Stage stage = new Stage();
     private final BorderPane root = new BorderPane();
 
+    private final Task task;
+    private final ActionManager actionManager;
+
+    // ==== Поля формы ====
     private final Label nameLabel = new Label();
     private final Label statusLabel = new Label();
 
@@ -35,12 +40,10 @@ public class TaskViewWindow {
     private final TextArea descriptionArea = new TextArea();
     private final FlowPane filesPane = new FlowPane(5, 5);
 
+    // ==== Кнопки ====
     private final Button editBtn = new Button("Edit");
     private final Button deleteBtn = new Button("Delete");
     private final Button closeBtn = new Button("Close");
-
-    private final Task task;
-    private final ActionManager actionManager;
 
     public TaskViewWindow(Task task, ActionManager actionManager) {
         this.task = task;
@@ -50,6 +53,10 @@ public class TaskViewWindow {
         setupActions();
     }
 
+    public void show() { stage.show(); }
+    public boolean isShowing() { return stage.isShowing(); }
+    public void close() { stage.close(); }
+    
     private void setup() {
 
         // ==== Header ====
@@ -194,7 +201,4 @@ public class TaskViewWindow {
         });
     }
 
-    public void show() {
-        stage.show();
-    }
 }

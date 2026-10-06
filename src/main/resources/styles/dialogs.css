@@ -1,0 +1,24 @@
+/* ============================================================
+   dialogs.css — Alert, TextInputDialog
+   ============================================================ */
+
+.em-dialog {
+    -fx-background-color: -em-bg-primary;
+}
+.em-dialog .header-panel {
+    -fx-background-color: -em-bg-secondary;
+}
+.em-dialog .header-panel .label {
+    -fx-text-fill: -em-text;
+}
+.em-dialog .content.label {
+    -fx-text-fill: -em-text;
+}
+.em-dialog .button {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text;
+    -fx-background-radius: 6px;
+}
+.em-dialog .button:hover {
+    -fx-background-color: -em-accent-hover;
+}

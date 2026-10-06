@@ -76,9 +76,13 @@ public final class Notifier {
         if (owner != null) {
             dialog.initOwner(owner);
         }
-        dialog.getDialogPane().getStylesheets().add(
-            Notifier.class.getResource("/styles/main.css").toExternalForm()
-        );
+
+        for (String path : Styles.sheets()) {
+            var url = Notifier.class.getResource(path);
+            if (url != null) {
+                dialog.getDialogPane().getStylesheets().add(url.toExternalForm());
+            }
+        }
         dialog.getDialogPane().getStyleClass().add("em-dialog");
     }
 

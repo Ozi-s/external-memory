@@ -1,0 +1,144 @@
+/* ============================================================
+   views.css — AllView, ContextView, TaskView, DecisionView
+   ============================================================ */
+
+/* ----- AllView ----- */
+
+.section-title {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.section-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.context-block-title {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.context-block-text {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 16px;
+}
+
+/* ----- TaskView: доска ----- */
+
+.task-column-header {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.task-card {
+    -fx-background-color: -em-bg-surface;
+    -fx-background-radius: 6px;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 8 10 8 10;
+    -fx-text-fill: -em-text;
+    -fx-max-width: infinity;
+    -fx-alignment: center-left;
+}
+.task-card:hover {
+    -fx-border-color: -em-accent;
+}
+.task-card.selected {
+    -fx-border-color: -em-accent;
+    -fx-border-width: 2px;
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text-active;
+}
+
+.selection-bar {
+    -fx-background-color: -em-bg-primary;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 12 8 12;
+}
+
+.selection-label {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ----- DecisionView: TreeView ----- */
+
+.tree-view {
+    -fx-background-color: -em-bg-primary;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+}
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -em-text;
+}
+.tree-cell:selected {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text-active;
+}
+
+/* ----- ContextView ----- */
+
+.context-panel {
+    -fx-background-color: -em-bg-surface;
+    -fx-background-radius: 8px;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+.context-panel > .viewport {
+    -fx-background-color: transparent;
+}
+
+.context-section-title {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.context-divider {
+    -fx-background-color: -em-border;
+    -fx-pref-height: 1;
+    -fx-min-height: 1;
+    -fx-max-height: 1;
+    -fx-pref-width: 40;
+    -fx-min-width: 40;
+    -fx-max-width: 40;
+}
+.session-row {
+    -fx-padding: 6 8 6 8;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.session-row:hover {
+    -fx-background-color: -em-bg-primary;
+}
+
+.session-row-date {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 14px;
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+}
+
+.session-row-focus {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 14px;
+    -fx-min-width: 35;
+    -fx-max-width: 35;
+}
+
+.session-row-title {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 14px;
+}

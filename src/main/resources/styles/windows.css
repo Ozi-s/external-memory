@@ -1,0 +1,190 @@
+/* ============================================================
+   windows.css — TaskViewWindow, AddTaskWindow, ContextHistoryWindow
+   ============================================================ */
+
+/* ----- Общие элементы окон ----- */
+
+.window-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -em-text;
+}
+
+.section-heading {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -em-text;
+}
+
+.meta-title {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 14px;
+}
+
+.meta-value {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -em-text;
+}
+
+.readonly-area {
+    -fx-background-color: -em-bg-surface;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 20px;
+    -fx-opacity: 1;
+}
+.readonly-area:focused {
+    -fx-border-color: -em-border;
+}
+.readonly-area .content {
+    -fx-background-color: -em-bg-surface;
+}
+
+/* ----- Бейджи статуса ----- */
+
+.status-badge {
+    -fx-background-color: -em-accent;
+    -fx-text-fill: -em-text-active;
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 8px;
+    -fx-font-size: 18px;
+}
+
+/* ----- Карточки (ContextHistoryWindow) ----- */
+
+.card {
+    -fx-background-color: -em-bg-surface;
+    -fx-background-radius: 8px;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-padding: 15;
+}
+.card:hover {
+    -fx-border-color: -em-accent;
+}
+.card.selected {
+    -fx-border-color: -em-accent;
+    -fx-border-width: 2px;
+}
+
+/* ----- Чипы (файлы) ----- */
+
+.chip {
+    -fx-background-color: -em-bg-surface;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 10 6 10;
+    -fx-text-fill: -em-text;
+}
+
+/* ----- Поля для ввода ----- */
+.field-label {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 14px;
+}
+
+.field-input {
+    -fx-background-color: -em-bg-surface;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: -em-text;
+    -fx-font-size: 18px;
+    -fx-padding: 6 10 6 10;
+}
+.field-input:focused {
+    -fx-border-color: -em-accent;
+}
+
+/* Серый контейнер секции */
+.form-section {
+    -fx-background-color: -em-bg-surface;
+    -fx-background-radius: 8px;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-padding: 12;
+}
+
+/* Тонкая настройка Spinner в стиле поля */
+.meta-value-input.spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+.meta-value-input.spinner .increment-arrow-button,
+.meta-value-input.spinner .decrement-arrow-button {
+    -fx-background-color: transparent;
+}
+.meta-value-input.spinner .increment-arrow,
+.meta-value-input.spinner .decrement-arrow {
+    -fx-background-color: -em-text-muted;
+}
+.meta-value-input.spinner .increment-arrow-button:hover .increment-arrow,
+.meta-value-input.spinner .decrement-arrow-button:hover .decrement-arrow {
+    -fx-background-color: -em-accent;
+}
+
+/* Тонкий контейнер только для файлов */
+.files-container {
+    -fx-background-color: -em-bg-surface;
+    -fx-background-radius: 6px;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-padding: 8;
+    -fx-min-height: 50;
+}
+
+/* Чип файла — окантовка на всём блоке */
+.file-item {
+    -fx-background-color: -em-bg-primary;
+    -fx-border-color: -em-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 3 3 3 8;
+    -fx-alignment: center-left;
+}
+.file-item:hover {
+    -fx-border-color: -em-accent;
+}
+
+.file-item-label {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 14px;
+}
+
+.file-item-remove {
+    -fx-background-color: transparent;
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 6 0 6;
+    -fx-cursor: hand;
+    -fx-min-width: 22;
+}
+.file-item-remove:hover {
+    -fx-text-fill: -em-danger;
+}
+
+/* Inline-инпут для добавления файла */
+.file-input {
+    -fx-background-color: -em-bg-primary;
+    -fx-border-color: -em-accent;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: -em-text;
+    -fx-prompt-text-fill: -em-text-muted;
+    -fx-font-size: 14px;
+    -fx-padding: 4 8 4 8;
+}

@@ -1,0 +1,52 @@
+/* ============================================================
+   base.css — переменные, .root, типографика
+   ============================================================ */
+
+.root {
+    /* Палитра */
+    -em-bg-primary:   #141414;
+    -em-bg-secondary: #0d0d0d;
+    -em-bg-surface:   #1c1c1c;
+
+    -em-accent:         #7f49b4;
+    -em-accent-hover:   #9a68ca;
+    -em-accent-pressed: #68399a;
+
+    -em-text:        #cfcfcf;
+    -em-text-muted:  #888888;
+    -em-text-active: #ffffff;
+
+    -em-border:      #333333;
+
+    /* Danger (для кнопок удаления) */
+    -em-danger:         #8a3a3a;
+    -em-danger-hover:   #a04444;
+    -em-danger-pressed: #6e2e2e;
+
+    /* Базовые */
+    -fx-background-color: -em-bg-secondary;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 16px;
+
+    /* Success */
+    -em-success:         #3a8a3a;
+    -em-success-hover:   #4aa04a;
+    -em-success-pressed: #2e6e2e;
+}
+
+/* ----- Общие метки ----- */
+
+.label {
+    -fx-text-fill: -em-text;
+}
+
+.label-muted {
+    -fx-text-fill: -em-text-muted;
+    -fx-font-size: 14px;
+}
+
+.label-section {
+    -fx-text-fill: -em-text;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}

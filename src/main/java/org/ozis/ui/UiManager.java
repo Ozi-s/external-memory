@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import org.ozis.ui.panel.InfoPanel;
 import org.ozis.ui.panel.LeftPanel;
 import org.ozis.ui.panel.TopPanel;
+import org.ozis.ui.util.Refreshable;
 import org.ozis.ui.util.Styles;
 
 public class UiManager {
@@ -25,6 +26,8 @@ public class UiManager {
     private final GridPane root = new GridPane();
 
     private final Map<String, Node> viewCache = new HashMap<>();
+    private String currentTab;
+    private Supplier<Node> currentFactory;
 
     private LeftPanel leftPanel;
     private TopPanel topPanel;
@@ -61,6 +64,9 @@ public class UiManager {
     }
 
     public void showView(String tabName, Supplier<Node> factory) {
+        currentTab = tabName;
+        currentFactory = factory;
+
         Node view = viewCache.get(tabName);
         if (view == null) {
             view = factory.get();
@@ -82,6 +88,22 @@ public class UiManager {
     
     public void invalidateView(String tabName) {
         viewCache.remove(tabName);
+
+        if (tabName.equals(currentTab) && currentFactory != null) {
+            Node view = currentFactory.get();
+            viewCache.put(tabName, view);
+            infoPanel.setContent(view);
+        }
+    }
+
+    public void refreshView(String tabName) {
+        Node view = viewCache.get(tabName);
+        if (view instanceof Refreshable refreshable) {
+            refreshable.refresh();
+            return;
+        }
+        // fallback — пересоздание
+        invalidateView(tabName);
     }
 
     // ==== Внутреннее ====

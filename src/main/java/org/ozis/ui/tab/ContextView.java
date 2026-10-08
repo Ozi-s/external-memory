@@ -182,7 +182,7 @@ public class ContextView {
             Button startBtn = new Button("Start session");
             startBtn.getStyleClass().add("btn");
             startBtn.setMaxWidth(Double.MAX_VALUE);
-            startBtn.setOnAction(e -> actionManager.startSession());
+            startBtn.setOnAction(e -> actionManager.startSession(null));
 
             card.getChildren().addAll(empty, startBtn);
         } else {

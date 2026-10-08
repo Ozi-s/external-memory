@@ -2,6 +2,7 @@ package org.ozis;
 
 import javafx.stage.Stage;
 import org.ozis.ui.UiManager;
+import org.ozis.ui.controller.TaskController;
 import org.ozis.ui.ActionManager;
 
 public class MainManager {
@@ -11,7 +12,8 @@ public class MainManager {
     public void start(Stage stage) {
         // Инициализация
         uiManager = new UiManager();
-        actionManager = new ActionManager(uiManager);
+        TaskController taskController = new TaskController(uiManager);
+        actionManager = new ActionManager(uiManager, taskController);
         
         // запуск
         uiManager.init(stage, actionManager);

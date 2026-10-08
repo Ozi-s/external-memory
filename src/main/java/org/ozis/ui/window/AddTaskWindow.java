@@ -28,6 +28,7 @@ import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
 import org.ozis.ui.ActionManager;
+import org.ozis.ui.controller.TaskController;
 import org.ozis.ui.util.Styles;
 import org.ozis.util.Ui;
 
@@ -37,7 +38,7 @@ public class AddTaskWindow {
     private final Stage stage = new Stage();
     private final BorderPane root = new BorderPane();
 
-    private final ActionManager actionManager;
+    private final TaskController taskController;
     private final Project currentProject;
 
     // ==== Поля формы ====
@@ -59,10 +60,10 @@ public class AddTaskWindow {
     private final Button duplicateBtn = new Button("Duplicate");
     private final Button cancelBtn = new Button("Cancel");
 
-    public AddTaskWindow(ActionManager actionManager, List<Task_Status> statusList, Task_Status selectedStatus, Project currentProject) {
-        this.actionManager = actionManager;
+    public AddTaskWindow(TaskController taskController, List<Task_Status> statusList,
+                        Task_Status selectedStatus, Project currentProject) {
+        this.taskController = taskController;
         this.currentProject = currentProject;
-
         setup(statusList, selectedStatus);
         setupActions(statusList);
     }
@@ -218,15 +219,14 @@ public class AddTaskWindow {
         saveBtn.setOnAction(e -> {
             Task task = buildTaskFromForm(statusList);
             if (task == null) return;
-            actionManager.createTask(task);
+            taskController.createTask(task);
             stage.close();
         });
 
         duplicateBtn.setOnAction(e -> {
             Task task = buildTaskFromForm(statusList);
             if (task == null) return;
-            actionManager.createTask(task);
-            // окно остаётся открытым
+            taskController.createTask(task);
         });
 
         cancelBtn.setOnAction(e -> stage.close());

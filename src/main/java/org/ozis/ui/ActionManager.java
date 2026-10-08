@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
-
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 
@@ -19,6 +18,7 @@ import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
 import org.ozis.entity.WorkSession;
+import org.ozis.ui.controller.TaskController;
 import org.ozis.ui.tab.AllView;
 import org.ozis.ui.tab.ContextView;
 import org.ozis.ui.tab.DecisionView;
@@ -30,9 +30,8 @@ import org.ozis.ui.window.TaskViewWindow;
 public class ActionManager {
 
     private final UiManager uiManager;
+    private final TaskController taskController;
 
-    private final TaskDao taskDao = new TaskDao(Task.class);
-    private final TasStaDao tasStaDao = new TasStaDao(Task_Status.class);
     private final ContextDao contextDao = new ContextDao(Context.class);
     private final ProjectDao projectDao = new ProjectDao(Project.class);
     private final WorkSessionDao workSessionDao = new WorkSessionDao();
@@ -41,8 +40,9 @@ public class ActionManager {
     private String currentTab;
     private Context lastContext;
 
-    public ActionManager(UiManager uiManager) {
+    public ActionManager(UiManager uiManager, TaskController taskController) {
         this.uiManager = uiManager;
+        this.taskController = taskController;
     }
 
     // ==== Действия ====
@@ -68,32 +68,6 @@ public class ActionManager {
         uiManager.showView(tabName, () -> createView(tabName));
     }
 
-    public void openTask(Task task) {
-        if (task == null) { return; }
-        TaskViewWindow window = new TaskViewWindow(task, this);
-        window.show();
-    }
-
-    public void createTask(Task task) {
-        if (task == null) return;
-
-        taskDao.save(task);
-
-        uiManager.invalidateView("Task");
-        uiManager.invalidateView("All");
-        switchTab(currentTab);
-    }
-        
-    public void deleteTasks(List<Task> tasks) {
-        if (tasks == null || tasks.isEmpty()) { return; }
-        
-        // TODO: когда появится soft delete в БД:
-        // for (Task t: tasks) {taskDao.softDelete(task); }
-        // uiManager.invalidateView("Task");
-        // uiManager.invalidateView("All");
-        // switchTab("Task");
-    }
-
     public void showContextHistory() {
         if (currentProject == null) return;
 
@@ -115,11 +89,11 @@ public class ActionManager {
         return workSessionDao.findActiveSession();
     }
     
-    public void startSession() {
+    public void startSession(Task focus) {
         if (currentProject == null) return;
-        workSessionDao.startSession(currentProject, null);
+
+        workSessionDao.startSession(currentProject, focus);
         uiManager.invalidateView("Context");
-        switchTab("Context");
     }
 
     public void endSession(WorkSession session) {
@@ -129,12 +103,25 @@ public class ActionManager {
         switchTab("Context");
     }
 
+    public void setFocus(Task task) {
+        if (task == null) return;
+
+        Optional<WorkSession> active = workSessionDao.findActiveSession();
+        if (active.isEmpty()) return;
+
+        WorkSession session = active.get();
+        session.setFocus(task);
+        workSessionDao.update(session);
+
+        uiManager.invalidateView("Context");
+    }
+
     // ==== Создание вьюх ====
 
     private Node createView(String tabName) {
         switch (tabName) {
             case "All":
-                AllView allView = new AllView(currentProject, taskDao.findTaskByPoject(currentProject.getId()), lastContext, this);
+                AllView allView = new AllView(currentProject, lastContext, taskController);
                 return allView.getRoot();
 
             case "Context":
@@ -145,7 +132,7 @@ public class ActionManager {
                 return contextView.getRoot();
 
             case "Task":
-                TaskView taskView = new TaskView(tasStaDao, taskDao, currentProject, this);
+                TaskView taskView = new TaskView(currentProject, taskController, this);
                 return taskView.getRoot();
 
             case "Decision":
@@ -173,19 +160,5 @@ public class ActionManager {
     private void refreshLastContext() {
         List<Context> contexts = contextDao.findLastContextByProject(currentProject.getName());
         lastContext = contexts.isEmpty() ? null : contexts.get(0);
-    }
-
-    public boolean confirmAndDelete(List<Task> tasks) {
-        if (tasks == null || tasks.isEmpty()) return false;
-
-        String header = tasks.size() == 1
-            ? "Delete \"" + tasks.get(0).getName() + "\"?"
-            : "Delete " + tasks.size() + " tasks?";
-            
-        boolean confirmed = Notifier.confirm("Delete tasks", header, "This action cannot be undone.");
-        if (!confirmed) return false;
-
-        deleteTasks(tasks);
-        return true;
     }
 }

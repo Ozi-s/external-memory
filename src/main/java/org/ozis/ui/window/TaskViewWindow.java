@@ -18,6 +18,7 @@ import javafx.geometry.Insets;
 
 import org.ozis.entity.Task;
 import org.ozis.ui.ActionManager;
+import org.ozis.ui.controller.TaskController;
 import org.ozis.ui.util.Styles;
 
 public class TaskViewWindow {
@@ -27,7 +28,7 @@ public class TaskViewWindow {
     private final BorderPane root = new BorderPane();
 
     private final Task task;
-    private final ActionManager actionManager;
+    private final TaskController taskController;
 
     // ==== Поля формы ====
     private final Label nameLabel = new Label();
@@ -45,9 +46,9 @@ public class TaskViewWindow {
     private final Button deleteBtn = new Button("Delete");
     private final Button closeBtn = new Button("Close");
 
-    public TaskViewWindow(Task task, ActionManager actionManager) {
+    public TaskViewWindow(Task task, TaskController taskController) {
         this.task = task;
-        this.actionManager = actionManager;
+        this.taskController = taskController;
 
         setup();
         setupActions();
@@ -192,7 +193,8 @@ public class TaskViewWindow {
         });
 
         deleteBtn.setOnAction(event -> {
-            actionManager.confirmAndDelete(List.of(task));
+            taskController.confirmAndDelete(List.of(task));
+            stage.close();
             // TODO: перекрасить окно в серый, изменить статус задачи, ПОКАЗАТЬ ЧТО МЫ ЕЁ УДАЛИЛИ
         });
 

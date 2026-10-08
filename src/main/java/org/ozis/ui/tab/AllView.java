@@ -16,10 +16,11 @@ import org.ozis.entity.Context;
 import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.ui.ActionManager;
+import org.ozis.ui.controller.TaskController;
 
 public class AllView {
 
-    private final ActionManager actionManager;
+    private final TaskController taskController;
     private final GridPane root = new GridPane();
 
     private final VBox taskList = new VBox(5);
@@ -30,11 +31,11 @@ public class AllView {
     private final ScrollPane sessionScroll = new ScrollPane();
     private final ScrollPane contextScroll = new ScrollPane();
 
-    public AllView(Project project, List<Task> tasks, Context lastContext, ActionManager actionManager) {
-        this.actionManager = actionManager;
+    public AllView(Project project, Context lastContext, TaskController taskController) {
+        this.taskController = taskController;
         setup();
 
-        buildTaskList(tasks);
+        buildTaskList(taskController.getTasks(project));
         buildSessionList();
         buildContext(lastContext);
 
@@ -115,7 +116,7 @@ public class AllView {
 
         label.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
-                actionManager.openTask(task);
+                taskController.openTask(task);
                 return;
             }
         });

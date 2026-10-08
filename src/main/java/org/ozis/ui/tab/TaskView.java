@@ -26,17 +26,21 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
+
 import org.ozis.dao.TasStaDao;
 import org.ozis.dao.TaskDao;
 import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
+import org.ozis.entity.WorkSession;
 import org.ozis.ui.ActionManager;
+import org.ozis.ui.controller.TaskController;
+import org.ozis.ui.util.Refreshable;
 import org.ozis.ui.window.AddTaskWindow;
 import org.ozis.ui.window.TaskViewWindow;
 
 
-public class TaskView {
+public class TaskView implements Refreshable {
 
     private final ScrollPane rootScroll = new ScrollPane();
     private final GridPane root = new GridPane();
@@ -48,15 +52,16 @@ public class TaskView {
     private final HBox selectionBar = new HBox(10);
     private final Label selectionLabel = new Label();
     private final Button deleteBtn = new Button("Delete selected");
+    private final Button focusBtn = new Button("Focus");
 
     // Контейнеры задач по статусу
     private final Map<String, VBox> taskContainers = new HashMap<>();
     private final Map<String, ScrollPane> taskScrolls = new HashMap<>();
 
+    private final TaskController taskController;
     private final ActionManager actionManager;
+    
     private final List<Task_Status> taskStatusList;
-    private final TaskDao taskDao;
-    private final TasStaDao tasStaDao;
     private List<Task> taskList;
 
     private List<Task> filterTask;
@@ -65,13 +70,12 @@ public class TaskView {
 
     private AddTaskWindow addTaskWindow;
 
-    public TaskView(TasStaDao tasStaDao, TaskDao taskDao, Project currentProject, ActionManager actionManager) {
-        this.tasStaDao = tasStaDao;
-        this.taskStatusList = tasStaDao.findAll();
-        this.taskDao = taskDao;
-        this.taskList = taskDao.findTaskByPoject(currentProject.getId());
+    public TaskView(Project currentProject, TaskController taskController, ActionManager actionManager) {
+        this.taskController = taskController;
         this.actionManager = actionManager;
         this.currentProject = currentProject;
+        this.taskStatusList = taskController.getAllStatuses();
+        this.taskList = taskController.getTasks(currentProject);
 
         setup();
         createStatusColumns();
@@ -79,7 +83,6 @@ public class TaskView {
 
         root.add(taskBoard, 0, 0);
         root.add(selectionBar, 0, 1);
-
         rootScroll.setContent(root);
     }
 
@@ -131,7 +134,12 @@ public class TaskView {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        selectionBar.getChildren().addAll(selectionLabel, spacer, deleteBtn);
+        focusBtn.getStyleClass().add("btn");
+        focusBtn.setVisible(false);
+        focusBtn.setManaged(false);
+        focusBtn.setOnAction(e -> onFocusAction());
+
+        selectionBar.getChildren().addAll(selectionLabel, spacer, focusBtn, deleteBtn);
         selectionBar.setAlignment(Pos.CENTER_LEFT);
         selectionBar.setPadding(new Insets(10, 0, 0, 0));
         selectionBar.getStyleClass().add("selection-bar");
@@ -140,7 +148,7 @@ public class TaskView {
 
         deleteBtn.setOnAction(e -> {
             if (selectedTasks.isEmpty()) return;
-            actionManager.confirmAndDelete(new ArrayList<>(selectedTasks));
+            taskController.confirmAndDelete(new ArrayList<>(selectedTasks));
             clearSelection();
         });
 
@@ -223,52 +231,53 @@ public class TaskView {
     public void setFilter(String filterName) {
         if (filterName == null) return;
         currentFilter = filterName;
+        applyFilter(filterName);
+    }
 
+    private void applyFilter(String filterName) {
         clearSelection();
         taskButtons.clear();
 
-        taskList = taskDao.findTaskByPoject(currentProject.getId());
+        taskList = taskController.getTasks(currentProject);
         for (Task_Status status : taskStatusList) {
             VBox ct = taskContainers.get(status.getName());
-            ct.getChildren().clear();
+            if (ct != null) ct.getChildren().clear();
         }
 
         switch (filterName) {
-            case "All":
+            case "All" -> addTasks(taskList);
+            case "Day" -> addTasks(filter(task -> task.getExecution_period() <= 1));
+            case "Week" -> addTasks(filter(task -> task.getExecution_period() <= 7 && task.getExecution_period() > 1));
+            case "Month" -> addTasks(filter(task -> task.getExecution_period() <= 31 && task.getExecution_period() > 7));
+            default -> {
+                System.err.println("Unknown filter: " + filterName);
                 addTasks(taskList);
-                break;
-            case "Day":
-                filterTask = taskList.stream()
-                    .filter(task -> task.getExecution_period() <= 1)
-                    .toList();
-                addTasks(filterTask);
-                break;
-            case "Week":
-                filterTask = taskList.stream()
-                    .filter(task -> task.getExecution_period() <= 7 && task.getExecution_period() > 1)
-                    .toList();
-                addTasks(filterTask);
-                break;
-            case "Month":
-                filterTask = taskList.stream()
-                    .filter(task -> task.getExecution_period() <= 31 && task.getExecution_period() > 7)
-                    .toList();
-                addTasks(filterTask);
-                break;
-            default:
-                System.out.println("ERROR: Ошибка установки фильтра.");
-                addTasks(taskList);
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Ошибка установки фильтра, не правильное имя фильтра.");
-                alert.setTitle("External-Memory - Alert filter");
-                alert.showAndWait();
-                break;
+            }
         }
+    }
+
+    private List<Task> filter(java.util.function.Predicate<Task> predicate) {
+        return taskList.stream().filter(predicate).toList();
     }
 
     private void addTasks(List<Task> taskList) {
         for (Task task : taskList) {
             addTask(task);
         }
+    }
+
+    @Override
+    public void refresh() {
+        clearSelection();
+        taskButtons.clear();
+        taskList = taskController.getTasks(currentProject);
+
+        for (Task_Status status : taskStatusList) {
+            VBox ct = taskContainers.get(status.getName());
+            if (ct != null) ct.getChildren().clear();
+        }
+
+        applyFilter(currentFilter);  // тот же фильтр, что был
     }
 
     // ==== Задачи ====
@@ -285,7 +294,7 @@ public class TaskView {
 
         taskButton.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
-                actionManager.openTask(task);
+                taskController.openTask(task);
                 event.consume();
                 return;
             }
@@ -341,11 +350,43 @@ public class TaskView {
         if (selectedTasks.isEmpty()) {
             selectionBar.setVisible(false);
             selectionBar.setManaged(false);
-        } else {
-            selectionBar.setVisible(true);
-            selectionBar.setManaged(true);
-            selectionLabel.setText(selectedTasks.size() + " selected");
+            return;
         }
+
+        selectionBar.setVisible(true);
+        selectionBar.setManaged(true);
+        selectionLabel.setText(selectedTasks.size() + " selected");
+
+        // Кнопка Focus — только если выделена ровно одна задача
+        if (selectedTasks.size() == 1) {
+            focusBtn.setVisible(true);
+            focusBtn.setManaged(true);
+
+            Optional<WorkSession> active = actionManager.getActiveSession();
+            if (active.isPresent()) {
+                focusBtn.setText("Set as focus");
+            } else {
+                focusBtn.setText("Start with this");
+            }
+        } else {
+            focusBtn.setVisible(false);
+            focusBtn.setManaged(false);
+        }
+    }
+
+    private void onFocusAction() {
+        if (selectedTasks.size() != 1) return;
+        Task task = selectedTasks.iterator().next();
+
+        Optional<WorkSession> active = actionManager.getActiveSession();
+        if (active.isPresent()) {
+            actionManager.setFocus(task);
+        } else {
+            actionManager.startSession(task);
+        }
+
+        // Обновить кнопку — состояние могло измениться
+        updateSelectionBar();
     }
 
     // ==== Кнопка Add task ====
@@ -369,9 +410,9 @@ public class TaskView {
             addTaskWindow.close();
         }
         addTaskWindow = new AddTaskWindow(
-            actionManager,
-            tasStaDao.findAll(),
-            tasStaDao.findByName(statusName).get(0),
+            taskController,
+            taskController.getAllStatuses(),
+            taskController.getStatusByName(statusName),
             currentProject
         );
         addTaskWindow.show();

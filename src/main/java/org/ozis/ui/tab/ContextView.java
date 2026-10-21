@@ -21,14 +21,17 @@ import org.ozis.entity.Context;
 import org.ozis.entity.Project;
 import org.ozis.entity.WorkSession;
 import org.ozis.ui.ActionManager;
+import org.ozis.ui.controller.SessionController;
 
 public class ContextView {
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd.MM");
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
-    private final GridPane root = new GridPane();
     private final ActionManager actionManager;
+    private final SessionController sessionController;
+    
+    private final GridPane root = new GridPane();
     private final Project currentProject;
     private final Context context;
 
@@ -39,10 +42,11 @@ public class ContextView {
     // Right
     private final VBox sessionBlock = new VBox(15);
 
-    public ContextView(Context context, Project currentProject, ActionManager actionManager) {
+    public ContextView(Context context, Project currentProject, SessionController sessionController, ActionManager actionManager) {
         this.context = context;
         this.currentProject = currentProject;
         this.actionManager = actionManager;
+        this.sessionController = sessionController;
 
         setup();
         buildContext();
@@ -174,7 +178,7 @@ public class ContextView {
         card.getStyleClass().add("context-panel");
         card.setPadding(new Insets(12));
 
-        Optional<WorkSession> active = actionManager.getActiveSession();
+        Optional<WorkSession> active = sessionController.getActiveSession();
         if (active.isEmpty()) {
             Label empty = new Label("No active session");
             empty.getStyleClass().add("label-muted");
@@ -182,7 +186,7 @@ public class ContextView {
             Button startBtn = new Button("Start session");
             startBtn.getStyleClass().add("btn");
             startBtn.setMaxWidth(Double.MAX_VALUE);
-            startBtn.setOnAction(e -> actionManager.startSession(null));
+            startBtn.setOnAction(e -> sessionController.startSession(currentProject, null));
 
             card.getChildren().addAll(empty, startBtn);
         } else {
@@ -197,7 +201,7 @@ public class ContextView {
             Button endBtn = new Button("End session");
             endBtn.getStyleClass().add("btn-danger");
             endBtn.setMaxWidth(Double.MAX_VALUE);
-            endBtn.setOnAction(e -> actionManager.endSession(s));
+            endBtn.setOnAction(e -> sessionController.openEndSessionDialog(s));
 
             card.getChildren().addAll(started, focus, endBtn);
         }
@@ -218,7 +222,7 @@ public class ContextView {
         VBox.setVgrow(list, Priority.ALWAYS);
         list.setMaxHeight(Double.MAX_VALUE);
 
-        List<WorkSession> recent = actionManager.getRecentSessions(5);
+        List<WorkSession> recent = sessionController.getRecentSessions(currentProject, 5);
         if (recent.isEmpty()) {
             Label empty = new Label("No sessions yet");
             empty.getStyleClass().add("label-muted");

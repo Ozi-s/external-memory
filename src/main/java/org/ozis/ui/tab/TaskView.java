@@ -12,12 +12,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,18 +23,15 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 
-
-import org.ozis.dao.TasStaDao;
-import org.ozis.dao.TaskDao;
 import org.ozis.entity.Project;
 import org.ozis.entity.Task;
 import org.ozis.entity.Task_Status;
 import org.ozis.entity.WorkSession;
 import org.ozis.ui.ActionManager;
+import org.ozis.ui.controller.SessionController;
 import org.ozis.ui.controller.TaskController;
 import org.ozis.ui.util.Refreshable;
 import org.ozis.ui.window.AddTaskWindow;
-import org.ozis.ui.window.TaskViewWindow;
 
 
 public class TaskView implements Refreshable {
@@ -59,6 +53,7 @@ public class TaskView implements Refreshable {
     private final Map<String, ScrollPane> taskScrolls = new HashMap<>();
 
     private final TaskController taskController;
+    private final SessionController sessionController;
     private final ActionManager actionManager;
     
     private final List<Task_Status> taskStatusList;
@@ -70,8 +65,9 @@ public class TaskView implements Refreshable {
 
     private AddTaskWindow addTaskWindow;
 
-    public TaskView(Project currentProject, TaskController taskController, ActionManager actionManager) {
+    public TaskView(Project currentProject, TaskController taskController, SessionController sessionController, ActionManager actionManager) {
         this.taskController = taskController;
+        this.sessionController = sessionController;
         this.actionManager = actionManager;
         this.currentProject = currentProject;
         this.taskStatusList = taskController.getAllStatuses();
@@ -362,7 +358,7 @@ public class TaskView implements Refreshable {
             focusBtn.setVisible(true);
             focusBtn.setManaged(true);
 
-            Optional<WorkSession> active = actionManager.getActiveSession();
+            Optional<WorkSession> active = sessionController.getActiveSession();
             if (active.isPresent()) {
                 focusBtn.setText("Set as focus");
             } else {
@@ -378,11 +374,11 @@ public class TaskView implements Refreshable {
         if (selectedTasks.size() != 1) return;
         Task task = selectedTasks.iterator().next();
 
-        Optional<WorkSession> active = actionManager.getActiveSession();
+        Optional<WorkSession> active = sessionController.getActiveSession();
         if (active.isPresent()) {
-            actionManager.setFocus(task);
+            sessionController.setFocus(task);
         } else {
-            actionManager.startSession(task);
+            sessionController.startSession(currentProject, task);
         }
 
         // Обновить кнопку — состояние могло измениться

@@ -61,3 +61,4 @@ bin/
 
 ai_index.py
 index_ai.txt
+.env
